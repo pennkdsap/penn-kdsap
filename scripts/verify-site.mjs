@@ -140,6 +140,8 @@ try {
     if (await interactions.locator('[data-hero-toggle], [data-hero-dot]').count()) issues.push('home: unwanted hero controls remain');
     if (await interactions.locator('[data-hero-slide]').count() !== 1) issues.push('home: hero should use one static image');
     const contact = interactions.locator('.contact-band .button-light');
+    await contact.scrollIntoViewIfNeeded();
+    await contact.focus();
     await contact.hover();
     await interactions.waitForFunction(() => getComputedStyle(document.querySelector('.contact-band .button-light')).backgroundColor === 'rgb(231, 237, 244)');
     const colors = await contact.evaluate((element) => {
@@ -183,7 +185,18 @@ try {
     await interactions.waitForFunction((number) => document.querySelector('[data-journey-current]')?.textContent === number, String(index + 1).padStart(2, '0'));
   }
   await interactions.goto(`${localBase}/calendar/`);
-  if (await interactions.getByRole('link', { name: /Add .* to Google Calendar/ }).count() !== 2 || await interactions.locator('.live-calendar iframe').count() !== 2) issues.push('calendars: two live calendars and subscription links are required');
+  if (await interactions.getByRole('link', { name: /Add .* to Google Calendar/ }).count() !== 2 || await interactions.locator('[data-custom-calendar]').count() !== 2 || await interactions.locator('iframe').count() !== 0) issues.push('calendars: two native calendars, subscription links, and no embeds are required');
+  for (const widget of await interactions.locator('[data-custom-calendar]').all()) {
+    const initialMonth = await widget.getAttribute('data-month');
+    await widget.getByRole('button', { name: 'Next month', exact: true }).click();
+    if (await widget.getAttribute('data-month') === initialMonth) issues.push('calendar: next-month navigation failed');
+    await widget.getByRole('button', { name: 'Previous month', exact: true }).click();
+    if (await widget.getAttribute('data-month') !== initialMonth) issues.push('calendar: previous-month navigation failed');
+  }
+  await interactions.goto(localBase);
+  if (await interactions.locator('[data-custom-calendar]').count() !== 1) issues.push('home: native calendar is missing');
+  const sampleCards = interactions.locator('.custom-event').filter({ has: interactions.locator('.sample-badge') });
+  if (await sampleCards.count() && !(await interactions.locator('.custom-calendar-notice').innerText()).includes('fictional')) issues.push('calendar: examples need a clear disclaimer');
   await interactions.close();
   await browser.close();
 } finally {

@@ -95,8 +95,8 @@
   },
   "quickEvents": {
     "eyebrow": "Quick calendar",
-    "title": "Upcoming public events",
-    "introduction": "Confirmed community screenings and public chapter events will appear here.",
+    "title": "Upcoming events",
+    "introduction": "Screenings, workshops, and member activities. Sample dates are marked below.",
     "emptyTitle": "New dates are on the way",
     "emptyText": "No public events are currently announced. Contact the chapter for upcoming screening information.",
     "actionLabel": "View the full calendar",
