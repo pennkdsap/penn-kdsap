@@ -45,4 +45,4 @@ Open **Website pages → Other website pages**, choose a page, edit its labeled 
 
 ## Connect the contact form
 
-The form remains disabled until **Contact → Form endpoint** contains a secure form-processing endpoint. Use a provider that supports spam protection and does not expose private credentials in browser code. The form should not collect medical records or sensitive health information.
+The contact form is configured to send inquiries to `pennkdsap@gmail.com` through FormSubmit. Confirm any FormSubmit activation email in that mailbox, then verify delivery with a non-sensitive test inquiry before relying on the form. The form should not collect medical records or sensitive health information.

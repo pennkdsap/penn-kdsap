@@ -8,7 +8,7 @@ const root = process.cwd();
 const outputDirectory = join(root, 'dist');
 const sourceDirectory = join(root, 'site-html-archive/pages');
 const deploymentBase = '/penn-kdsap';
-const publicSiteUrl = 'https://akashdubey.me';
+const publicSiteUrl = 'https://pennkdsap.github.io';
 const pages = (await readdir(sourceDirectory)).filter((file) => file.endsWith('.html')).sort();
 const nativeFiles = new Set([
   'index.html', 'about.html', 'kidney-screenings.html', 'kdsap.html', 'calendar.html',
@@ -107,7 +107,7 @@ try {
       const response = await page.goto(`${localBase}${route}`, { waitUntil: 'load' });
       await page.waitForTimeout(750);
       const result = await page.evaluate(() => ({
-        externalLinkFailures: [...document.querySelectorAll('a[href]')].filter((a) => /^https?:/.test(a.href) && ![location.origin, 'https://akashdubey.me'].includes(new URL(a.href).origin) && (a.target !== '_blank' || !a.relList.contains('noopener'))).map((a) => a.href),
+        externalLinkFailures: [...document.querySelectorAll('a[href]')].filter((a) => /^https?:/.test(a.href) && ![location.origin, 'https://pennkdsap.github.io'].includes(new URL(a.href).origin) && (a.target !== '_blank' || !a.relList.contains('noopener'))).map((a) => a.href),
         width: document.documentElement.clientWidth,
         scrollWidth: document.documentElement.scrollWidth,
         height: document.body.scrollHeight,
