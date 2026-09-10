@@ -1,14 +1,141 @@
 {
-  "slides": [
-    {"eyebrow": "We gather", "title": "PASSIONATE STUDENT VOLUNTEERS", "image": "/images/slide-volunteers.jpg"},
-    {"eyebrow": "We are", "title": "A FAMILY WITH THE COMMUNITY", "image": "/images/slide-community.jpg"},
-    {"eyebrow": "We provide", "title": "FREE COMMUNITY HEALTH SCREENINGS", "image": "/images/slide-screenings.jpg"}
+  "pageTitle": "Penn KDSAP | Kidney health screening and awareness at Penn",
+  "metaDescription": "Penn KDSAP works with Philadelphia communities to provide free kidney health screenings, education, and clear next steps for care.",
+  "siteName": "Penn KDSAP",
+  "skipLinkText": "Skip to main content",
+  "brandAlt": "Penn KDSAP",
+  "primaryNavigationLabel": "Primary navigation",
+  "menuLabel": "Menu",
+  "navigation": [
+    { "label": "About", "url": "about/" },
+    { "label": "Screenings", "url": "kidney-screenings/" },
+    { "label": "Students", "url": "kdsap/" },
+    { "label": "Events", "url": "calendar/" },
+    { "label": "Team", "url": "meet-the-team/" },
+    { "label": "Resources", "url": "health-education/" }
   ],
-  "newsletterTitle": "KDSAP Fall 2025 Newsletter",
-  "newsletterText": "Explore our work through the fall issue of our Penn KDSAP newsletter — highlighting our screenings, internal events, and committees!",
-  "newsletterUrl": "https://www.canva.com/design/DAG-39MLQS8/yK1C4zY-AFYW2bjSPAbDAA/view?utm_content=DAG-39MLQS8&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h0c4b80bced",
-  "recapTitle": "2023–2024 Recap",
-  "recapText": "Join us as we review our 2023–24 semesters, full of screenings, training, career development, education, and recruitment opportunities!",
-  "aboutText": "Penn KDSAP (Penn Kidney Disease Screening and Awareness Program) works with community organizations to provide free community health screenings, including a physician consultation, in underserved neighborhoods throughout Philadelphia. We are the only student organization at the University of Pennsylvania devoted to kidney health and one of few undergraduate organizations to offer medical and clinical service.",
-  "contactText": "Interested in scheduling a free screening or joining the organization?"
+  "headerAction": { "label": "Request a screening", "url": "contact-us/" },
+  "redirectPage": {
+    "pageTitle": "Page moved | Penn KDSAP",
+    "message": "This page has moved.",
+    "actionLabel": "Continue to the updated page"
+  },
+  "hero": {
+    "eyebrow": "Penn Kidney Disease Screening and Awareness Program",
+    "title": "Free kidney health screenings in partnership with Philadelphia communities",
+    "summary": "Penn students and physicians work with local organizations to provide screening, education, and clear next steps for care.",
+    "image": "/images/hero-1800.webp",
+    "imageAlt": "Penn KDSAP volunteers at a community kidney health screening",
+    "actionsLabel": "Featured actions",
+    "primaryAction": { "label": "Find a screening", "url": "kidney-screenings/" },
+    "secondaryAction": { "label": "Request a screening", "url": "contact-us/" },
+    "studentAction": { "label": "Penn student? Join KDSAP", "url": "kdsap/" }
+  },
+  "pathways": {
+    "eyebrow": "Start here",
+    "title": "Kidney health begins with a clear next step",
+    "introduction": "Penn KDSAP brings students, physicians, and Philadelphia organizations together around free community health screenings.",
+    "items": [
+      { "number": "01", "title": "For community members", "text": "Learn what happens at a screening and find information about upcoming opportunities.", "actionLabel": "Explore screenings", "actionUrl": "kidney-screenings/" },
+      { "number": "02", "title": "For Penn students", "text": "Discover how students learn, volunteer, and help expand access to kidney health education.", "actionLabel": "Get involved", "actionUrl": "kdsap/" },
+      { "number": "03", "title": "For hosts and partners", "text": "Start a conversation about bringing a Penn KDSAP screening to your community.", "actionLabel": "Request a screening", "actionUrl": "contact-us/" }
+    ]
+  },
+  "photoReel": {
+    "label": "Screenings, training, and community partnership",
+    "images": [
+      { "image": "/images/reel/screening-check.webp", "alt": "A Penn KDSAP volunteer assists another volunteer at a screening station" },
+      { "image": "/images/reel/community-consultation.webp", "alt": "Penn KDSAP volunteers speak with community members at a screening" },
+      { "image": "/images/reel/volunteer-training.webp", "alt": "Penn students gather around a volunteer training demonstration" },
+      { "image": "/images/reel/screening-team.webp", "alt": "Penn KDSAP volunteers stand together at a screening station" },
+      { "image": "/images/reel/training-discussion.webp", "alt": "A Penn KDSAP volunteer leads a training discussion" },
+      { "image": "/images/reel/blood-pressure-training.webp", "alt": "Penn students practice taking a blood pressure reading" }
+    ]
+  },
+  "impact": {
+    "eyebrow": "Impact by the numbers",
+    "title": "A year of preparation, partnership, and care",
+    "introduction": "A verified snapshot from Penn KDSAP’s 2023–24 year in review.",
+    "sourceLabel": "Explore chapter updates",
+    "sourceUrl": "news/",
+    "items": [
+      { "value": "6", "label": "In-person kidney screenings" },
+      { "value": "120+", "label": "Students attended general training" },
+      { "value": "6", "label": "Screening stations in the volunteer workflow" },
+      { "value": "2", "label": "General training sessions" }
+    ]
+  },
+  "communityMap": {
+    "eyebrow": "Screening network",
+    "title": "Six partner sites across Philadelphia and nearby communities",
+    "introduction": "These pins show the community sites named in Penn KDSAP’s 2023–24 year in review.",
+    "mapLabel": "Map of six Penn KDSAP screening sites",
+    "fallbackText": "The interactive map could not load. Screening addresses remain available in the site list.",
+    "listLabel": "Screening site list",
+    "pinLabel": "Show screening site",
+    "sourceLabel": "See screening information",
+    "sourceUrl": "kidney-screenings/",
+    "pins": [
+      { "name": "Holy Cross Baptist Church", "address": "1900–04 North 63rd Street, Philadelphia", "date": "October 21, 2023", "latitude": 39.983653, "longitude": -75.247624 },
+      { "name": "Masjid Al-Jamia", "address": "4228 Walnut Street, Philadelphia", "date": "November 11, 2023", "latitude": 39.954636, "longitude": -75.208385 },
+      { "name": "Guru Nanak Sikh", "address": "6706 Garden Court, Upper Darby", "date": "December 3, 2023", "latitude": 39.962965, "longitude": -75.255473 },
+      { "name": "Chinese Gospel Church", "address": "222 North 12th Street, Philadelphia", "date": "March 16, 2024", "latitude": 39.956479, "longitude": -75.159143 },
+      { "name": "Opportunities Towers", "address": "1717 West Hunting Park Avenue, Philadelphia", "date": "March 31, 2024", "latitude": 40.015724, "longitude": -75.155844 },
+      { "name": "Why Not Prosper", "address": "717 East Chelten Avenue, Philadelphia", "date": "April 27, 2024", "latitude": 40.044858, "longitude": -75.165828 }
+    ]
+  },
+  "quickEvents": {
+    "eyebrow": "Quick calendar",
+    "title": "Upcoming public events",
+    "introduction": "Confirmed community screenings and public chapter events will appear here.",
+    "emptyTitle": "New dates are on the way",
+    "emptyText": "No public events are currently announced. Contact the chapter for upcoming screening information.",
+    "actionLabel": "View the full calendar",
+    "actionUrl": "calendar/"
+  },
+  "mission": {
+    "eyebrow": "Our mission",
+    "title": "Student-led service with community at the center",
+    "text": "Penn KDSAP (Penn Kidney Disease Screening and Awareness Program) works with community organizations to provide free community health screenings, including a physician consultation, in underserved neighborhoods throughout Philadelphia. We are the only student organization at the University of Pennsylvania devoted to kidney health and one of few undergraduate organizations to offer medical and clinical service.",
+    "image": "/images/slide-screenings-1400.webp",
+    "imageAlt": "A Penn KDSAP volunteer assisting at a kidney health screening",
+    "imageCaption": "Students and clinicians work side by side at community screenings.",
+    "actionLabel": "See what we do",
+    "actionUrl": "what-we-do/"
+  },
+  "stories": {
+    "eyebrow": "From the field",
+    "title": "See Penn KDSAP in action",
+    "actionLabel": "View the gallery",
+    "actionUrl": "gallery/",
+    "items": [
+      { "image": "/images/slide-community-1400.webp", "imageAlt": "Penn KDSAP members gathered with community partners", "caption": "Building lasting relationships with Philadelphia communities" },
+      { "image": "/images/slide-volunteers-1400.webp", "imageAlt": "Penn KDSAP student volunteers working together", "caption": "Students learning through service and teamwork" }
+    ]
+  },
+  "contact": {
+    "eyebrow": "Bring a screening to your community",
+    "title": "Let’s start with a conversation",
+    "text": "Tell us about your organization, neighborhood, or interest in volunteering.",
+    "actionLabel": "Contact Penn KDSAP",
+    "actionUrl": "contact-us/"
+  },
+  "footer": {
+    "description": "Kidney health screening, education, and community partnership at the University of Pennsylvania.",
+    "exploreHeading": "Explore",
+    "exploreLinks": [
+      { "label": "About", "url": "about/" },
+      { "label": "Screenings", "url": "kidney-screenings/" },
+      { "label": "Team", "url": "meet-the-team/" },
+      { "label": "Gallery", "url": "gallery/" }
+    ],
+    "connectHeading": "Connect",
+    "connectLinks": [
+      { "label": "Contact us", "url": "contact-us/" },
+      { "label": "Events", "url": "calendar/" },
+      { "label": "For students", "url": "kdsap/" }
+    ],
+    "copyright": "Penn KDSAP",
+    "affiliation": "University of Pennsylvania"
+  }
 }

@@ -1,0 +1,31 @@
+{
+  "pageTitle": "Stories and Updates | Penn KDSAP",
+  "metaDescription": "Explore Penn KDSAP updates, newsletters, and year-in-review highlights.",
+  "eyebrow": "Stories and updates",
+  "title": "The work behind each screening",
+  "summary": "Newsletters and visual recaps preserve the chapter’s training, service, education, and community partnerships.",
+  "heroImage": "/images/reel/training-discussion.webp",
+  "heroImageAlt": "A Penn KDSAP volunteer leading a chapter training discussion",
+  "sectionEyebrow": "Chapter archive",
+  "sectionTitle": "Read and explore",
+  "items": [
+    {
+      "title": "2025 Year in Review",
+      "text": "A visual recap of screenings, training, career development, education, and recruitment activities.",
+      "actionLabel": "See related photos",
+      "actionUrl": "../gallery/"
+    },
+    {
+      "title": "Fall 2025 Newsletter",
+      "text": "Highlights from Penn KDSAP screenings, internal events, and committee work.",
+      "actionLabel": "Open the newsletter",
+      "actionUrl": "https://www.canva.com/design/DAG-39MLQS8/yK1C4zY-AFYW2bjSPAbDAA/view"
+    },
+    {
+      "title": "2023–2024 Recap",
+      "text": "A look back at chapter service, training, education, recruitment, and student development.",
+      "actionLabel": "Browse the gallery",
+      "actionUrl": "../gallery/"
+    }
+  ]
+}

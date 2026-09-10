@@ -1,0 +1,20 @@
+{
+  "pageTitle": "Community Screenings | Penn KDSAP",
+  "metaDescription": "Learn what to expect from a Penn KDSAP community kidney health screening or request a screening for your organization.",
+  "eyebrow": "Community screenings",
+  "title": "Free screenings built with local partners",
+  "summary": "Trained Penn student volunteers and supervising physicians bring screening activities, education, and on-site consultation to community locations.",
+  "heroImage": "/images/hero-1800.webp",
+  "heroImageAlt": "Penn KDSAP volunteers working at a community screening",
+  "sectionEyebrow": "What to expect",
+  "sectionTitle": "A welcoming, organized screening experience",
+  "sectionText": "Each event is coordinated with the host organization. Available stations and services may vary by event, and visitors receive instructions from the screening team on site.",
+  "steps": [
+    { "number": "01", "title": "Welcome", "text": "Volunteers explain the event flow and help visitors begin the screening process." },
+    { "number": "02", "title": "Screening stations", "text": "Trained students support the measurements and activities planned for that event under clinical supervision." },
+    { "number": "03", "title": "Health education", "text": "Visitors can review plain-language kidney health information and ask general questions." },
+    { "number": "04", "title": "Physician consultation", "text": "When included in the event, a physician discusses results and appropriate next steps directly with the visitor." }
+  ],
+  "actionLabel": "Request a community screening",
+  "actionUrl": "../contact-us/"
+}

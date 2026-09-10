@@ -22,67 +22,1023 @@ content:
         operations:
           delete: false
         fields:
-          - name: slides
-            label: Homepage carousel slides
+          - name: pageTitle
+            label: Browser and share title
+            type: string
+            required: true
+          - name: metaDescription
+            label: Search description
+            type: text
+            required: true
+          - name: siteName
+            label: Site name
+            type: string
+            required: true
+          - name: skipLinkText
+            label: Skip link text
+            type: string
+            required: true
+          - name: brandAlt
+            label: Logo accessible label
+            type: string
+            required: true
+          - name: primaryNavigationLabel
+            label: Navigation accessible label
+            type: string
+            required: true
+          - name: menuLabel
+            label: Mobile menu label
+            type: string
+            required: true
+          - name: navigation
+            label: Main navigation
             type: object
             list: true
+            required: true
+            fields:
+              - name: label
+                label: Link text
+                type: string
+                required: true
+              - name: url
+                label: Link path
+                type: string
+                required: true
+          - name: headerAction
+            label: Header action
+            type: object
+            fields:
+              - name: label
+                label: Button text
+                type: string
+                required: true
+              - name: url
+                label: Link path
+                type: string
+                required: true
+          - name: redirectPage
+            label: Redirect page
+            type: object
+            fields:
+              - name: pageTitle
+                label: Browser title
+                type: string
+                required: true
+              - name: message
+                label: Message
+                type: string
+                required: true
+              - name: actionLabel
+                label: Link text
+                type: string
+                required: true
+          - name: hero
+            label: Hero
+            type: object
+            fields:
+              - name: eyebrow
+                label: Small heading
+                type: string
+                required: true
+              - name: title
+                label: Main heading
+                type: string
+                required: true
+              - name: summary
+                label: Supporting text
+                type: text
+                required: true
+              - name: image
+                label: Background image
+                type: image
+                required: true
+              - name: imageAlt
+                label: Background image description
+                type: string
+                required: true
+              - name: actionsLabel
+                label: Actions accessible label
+                type: string
+                required: true
+              - name: primaryAction
+                label: Primary action
+                type: object
+                fields:
+                  - name: label
+                    label: Button text
+                    type: string
+                    required: true
+                  - name: url
+                    label: Link path
+                    type: string
+                    required: true
+              - name: secondaryAction
+                label: Secondary action
+                type: object
+                fields:
+                  - name: label
+                    label: Button text
+                    type: string
+                    required: true
+                  - name: url
+                    label: Link path
+                    type: string
+                    required: true
+              - name: studentAction
+                label: Student action
+                type: object
+                fields:
+                  - name: label
+                    label: Link text
+                    type: string
+                    required: true
+                  - name: url
+                    label: Link path
+                    type: string
+                    required: true
+          - name: pathways
+            label: Audience pathways
+            type: object
+            fields:
+              - name: eyebrow
+                label: Small heading
+                type: string
+                required: true
+              - name: title
+                label: Heading
+                type: string
+                required: true
+              - name: introduction
+                label: Introduction
+                type: text
+                required: true
+              - name: items
+                label: Pathway cards
+                type: object
+                list: true
+                required: true
+                fields:
+                  - name: number
+                    label: Display number
+                    type: string
+                    required: true
+                  - name: title
+                    label: Card heading
+                    type: string
+                    required: true
+                  - name: text
+                    label: Card text
+                    type: text
+                    required: true
+                  - name: actionLabel
+                    label: Link text
+                    type: string
+                    required: true
+                  - name: actionUrl
+                    label: Link path
+                    type: string
+                    required: true
+          - name: photoReel
+            label: Moving photo reel
+            type: object
+            fields:
+              - name: label
+                label: Accessible section label
+                type: string
+                required: true
+              - name: images
+                label: Photos
+                type: object
+                list: true
+                required: true
+                fields:
+                  - name: image
+                    label: Photo
+                    type: image
+                    required: true
+                  - name: alt
+                    label: Photo description
+                    type: string
+                    required: true
+          - name: impact
+            label: Homepage impact numbers
+            type: object
+            fields:
+              - name: eyebrow
+                label: Small heading
+                type: string
+                required: true
+              - name: title
+                label: Heading
+                type: string
+                required: true
+              - name: introduction
+                label: Reporting-period note
+                type: text
+                required: true
+              - name: sourceLabel
+                label: Source link text
+                type: string
+                required: true
+              - name: sourceUrl
+                label: Source link path
+                type: string
+                required: true
+              - name: items
+                label: Impact numbers
+                type: object
+                list:
+                  collapsible:
+                    collapsed: true
+                    summary: "{value} — {label}"
+                required: true
+                fields:
+                  - name: value
+                    label: Display value
+                    type: string
+                    required: true
+                  - name: label
+                    label: Description
+                    type: string
+                    required: true
+          - name: communityMap
+            label: Homepage screening map
+            type: object
+            fields:
+              - name: eyebrow
+                label: Small heading
+                type: string
+                required: true
+              - name: title
+                label: Heading
+                type: string
+                required: true
+              - name: introduction
+                label: Introduction
+                type: text
+                required: true
+              - name: mapLabel
+                label: Map accessible label
+                type: string
+                required: true
+              - name: fallbackText
+                label: Map fallback text
+                type: text
+                required: true
+              - name: listLabel
+                label: Site-list accessible label
+                type: string
+                required: true
+              - name: pinLabel
+                label: Pin accessible action
+                type: string
+                required: true
+              - name: sourceLabel
+                label: Section link text
+                type: string
+                required: true
+              - name: sourceUrl
+                label: Section link path
+                type: string
+                required: true
+              - name: pins
+                label: Screening locations
+                type: object
+                list:
+                  collapsible:
+                    collapsed: true
+                    summary: "{name} — {date}"
+                required: true
+                fields:
+                  - name: name
+                    label: Site name
+                    type: string
+                    required: true
+                  - name: address
+                    label: Address
+                    type: string
+                    required: true
+                  - name: date
+                    label: Screening date
+                    type: string
+                    required: true
+                  - name: latitude
+                    label: Latitude
+                    type: number
+                    required: true
+                  - name: longitude
+                    label: Longitude
+                    type: number
+                    required: true
+          - name: quickEvents
+            label: Homepage quick calendar
+            type: object
+            fields:
+              - name: eyebrow
+                label: Small heading
+                type: string
+                required: true
+              - name: title
+                label: Heading
+                type: string
+                required: true
+              - name: introduction
+                label: Introduction
+                type: text
+                required: true
+              - name: emptyTitle
+                label: Empty-calendar heading
+                type: string
+                required: true
+              - name: emptyText
+                label: Empty-calendar text
+                type: text
+                required: true
+              - name: actionLabel
+                label: Calendar link text
+                type: string
+                required: true
+              - name: actionUrl
+                label: Calendar link path
+                type: string
+                required: true
+          - name: mission
+            label: Mission section
+            type: object
+            fields:
+              - name: eyebrow
+                label: Small heading
+                type: string
+                required: true
+              - name: title
+                label: Heading
+                type: string
+                required: true
+              - name: text
+                label: Mission text
+                type: text
+                required: true
+              - name: image
+                label: Photo
+                type: image
+                required: true
+              - name: imageAlt
+                label: Photo description
+                type: string
+                required: true
+              - name: imageCaption
+                label: Photo caption
+                type: string
+                required: true
+              - name: actionLabel
+                label: Link text
+                type: string
+                required: true
+              - name: actionUrl
+                label: Link path
+                type: string
+                required: true
+          - name: stories
+            label: Field stories section
+            type: object
+            fields:
+              - name: eyebrow
+                label: Small heading
+                type: string
+                required: true
+              - name: title
+                label: Heading
+                type: string
+                required: true
+              - name: actionLabel
+                label: Section link text
+                type: string
+                required: true
+              - name: actionUrl
+                label: Section link path
+                type: string
+                required: true
+              - name: items
+                label: Story photos
+                type: object
+                list: true
+                required: true
+                fields:
+                  - name: image
+                    label: Photo
+                    type: image
+                    required: true
+                  - name: imageAlt
+                    label: Photo description
+                    type: string
+                    required: true
+                  - name: caption
+                    label: Story caption
+                    type: string
+                    required: true
+          - name: contact
+            label: Contact section
+            type: object
+            fields:
+              - name: eyebrow
+                label: Small heading
+                type: string
+                required: true
+              - name: title
+                label: Heading
+                type: string
+                required: true
+              - name: text
+                label: Supporting text
+                type: text
+                required: true
+              - name: actionLabel
+                label: Button text
+                type: string
+                required: true
+              - name: actionUrl
+                label: Link path
+                type: string
+                required: true
+          - name: footer
+            label: Footer
+            type: object
+            fields:
+              - name: description
+                label: Organization description
+                type: text
+                required: true
+              - name: exploreHeading
+                label: Explore heading
+                type: string
+                required: true
+              - name: exploreLinks
+                label: Explore links
+                type: object
+                list: true
+                fields:
+                  - name: label
+                    label: Link text
+                    type: string
+                    required: true
+                  - name: url
+                    label: Link path
+                    type: string
+                    required: true
+              - name: connectHeading
+                label: Connect heading
+                type: string
+                required: true
+              - name: connectLinks
+                label: Connect links
+                type: object
+                list: true
+                fields:
+                  - name: label
+                    label: Link text
+                    type: string
+                    required: true
+                  - name: url
+                    label: Link path
+                    type: string
+                    required: true
+              - name: copyright
+                label: Copyright name
+                type: string
+                required: true
+              - name: affiliation
+                label: Affiliation text
+                type: string
+                required: true
+      - name: leadership
+        label: Leadership team
+        type: file
+        path: content/pages/team.json
+        format: json
+        operations:
+          delete: false
+        fields:
+          - name: pageTitle
+            label: Browser and share title
+            type: string
+            required: true
+          - name: metaDescription
+            label: Search description
+            type: text
+            required: true
+          - name: eyebrow
+            label: Hero small heading
+            type: string
+            required: true
+          - name: title
+            label: Hero heading
+            type: string
+            required: true
+          - name: summary
+            label: Hero supporting text
+            type: text
+            required: true
+          - name: heroImage
+            label: Hero image
+            type: image
+            required: true
+          - name: heroImageAlt
+            label: Hero image description
+            type: string
+            required: true
+          - name: boardEyebrow
+            label: Board small heading
+            type: string
+            required: true
+          - name: boardTitle
+            label: Board heading
+            type: string
+            required: true
+          - name: boardIntroduction
+            label: Board introduction
+            type: text
+            required: true
+          - name: people
+            label: Leadership members
+            type: object
+            description: Use Add item to create a member, drag cards to reorder them, or turn off Show on website to keep a member saved but unpublished.
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{name} — {role}"
+            fields:
+              - name: name
+                label: Full name
+                type: string
+                required: true
+              - name: role
+                label: Leadership title
+                type: string
+                required: true
+              - name: group
+                label: Group label
+                type: string
+                description: For example, Student Board.
+                required: true
+              - name: image
+                label: Portrait photo
+                type: image
+                required: true
+              - name: imageAlt
+                label: Portrait description
+                type: string
+                description: Use a short description such as Portrait of Jane Smith.
+                required: true
+              - name: active
+                label: Show on website
+                type: boolean
+                default: true
+      - name: events
+        label: Events and calendar
+        type: file
+        path: content/pages/events.json
+        format: json
+        operations:
+          delete: false
+        fields:
+          - name: pageTitle
+            label: Browser and share title
+            type: string
+            required: true
+          - name: metaDescription
+            label: Search description
+            type: text
+            required: true
+          - name: eyebrow
+            label: Hero small heading
+            type: string
+            required: true
+          - name: title
+            label: Hero heading
+            type: string
+            required: true
+          - name: summary
+            label: Hero supporting text
+            type: text
+            required: true
+          - name: heroImage
+            label: Hero image
+            type: image
+            required: true
+          - name: heroImageAlt
+            label: Hero image description
+            type: string
+            required: true
+          - name: publicCalendarUrl
+            label: Public Google Calendar URL
+            type: string
+            description: Paste the public calendar link here. Leave blank if the calendar is not public yet.
+          - name: calendarActionLabel
+            label: Calendar button text
+            type: string
+            required: true
+          - name: upcomingEvents
+            label: Upcoming public events
+            type: object
+            description: These cards appear on the Events page; the first three also appear in the homepage quick calendar.
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{month} {day} — {title}"
+            fields:
+              - name: month
+                label: Month abbreviation
+                type: string
+                required: true
+              - name: day
+                label: Day
+                type: string
+                required: true
+              - name: type
+                label: Event type
+                type: string
+                required: true
+              - name: title
+                label: Event title
+                type: string
+                required: true
+              - name: location
+                label: Location
+                type: string
+                required: true
+              - name: actionLabel
+                label: Event link text
+                type: string
+              - name: actionUrl
+                label: Event link URL
+                type: string
+          - name: emptyEyebrow
+            label: Empty-calendar small heading
+            type: string
+            required: true
+          - name: emptyTitle
+            label: Empty-calendar heading
+            type: string
+            required: true
+          - name: emptyText
+            label: Empty-calendar text
+            type: text
+            required: true
+          - name: memberTitle
+            label: Member calendar heading
+            type: string
+            required: true
+          - name: memberText
+            label: Member calendar text
+            type: text
+            required: true
+          - name: contactActionLabel
+            label: Contact link text
+            type: string
+            required: true
+          - name: contactActionUrl
+            label: Contact link URL
+            type: string
+            required: true
+      - name: native-pages
+        label: Other website pages
+        type: collection
+        path: content/pages
+        exclude: [team.json, events.json]
+        format: json
+        operations:
+          create: false
+          delete: false
+        view:
+          primary: title
+          fields: [title, eyebrow]
+        fields:
+          - name: pageTitle
+            label: Browser and share title
+            type: string
+            required: true
+          - name: metaDescription
+            label: Search description
+            type: text
+            required: true
+          - name: eyebrow
+            label: Hero small heading
+            type: string
+            required: true
+          - name: title
+            label: Hero heading
+            type: string
+            required: true
+          - name: summary
+            label: Hero supporting text
+            type: text
+            required: true
+          - name: heroImage
+            label: Hero image
+            type: image
+            required: true
+          - name: heroImageAlt
+            label: Hero image description
+            type: string
+            required: true
+          - name: sections
+            label: About sections
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{title}"
             fields:
               - name: eyebrow
                 label: Small heading
                 type: string
               - name: title
-                label: Main heading
+                label: Heading
+                type: string
+              - name: text
+                label: Text
+                type: text
+          - name: sectionEyebrow
+            label: Main section small heading
+            type: string
+          - name: sectionTitle
+            label: Main section heading
+            type: string
+          - name: sectionText
+            label: Main section introduction
+            type: text
+          - name: steps
+            label: Screening steps
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{number} {title}"
+            fields:
+              - name: number
+                label: Display number
+                type: string
+              - name: title
+                label: Heading
+                type: string
+              - name: text
+                label: Text
+                type: text
+          - name: objectives
+            label: Student experience cards
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{title}"
+            fields:
+              - name: title
+                label: Heading
+                type: string
+              - name: text
+                label: Text
+                type: text
+          - name: initiatives
+            label: Education initiatives
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{title}"
+            fields:
+              - name: title
+                label: Heading
+                type: string
+              - name: text
+                label: Text
+                type: text
+          - name: items
+            label: Story cards
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{title}"
+            fields:
+              - name: title
+                label: Heading
+                type: string
+              - name: text
+                label: Text
+                type: text
+              - name: actionLabel
+                label: Link text
+                type: string
+              - name: actionUrl
+                label: Link URL
+                type: string
+          - name: actionLabel
+            label: Main action text
+            type: string
+          - name: actionUrl
+            label: Main action URL
+            type: string
+          - name: disclaimer
+            label: Medical disclaimer
+            type: text
+          - name: emptyEyebrow
+            label: Empty calendar small heading
+            type: string
+          - name: emptyTitle
+            label: Empty calendar heading
+            type: string
+          - name: emptyText
+            label: Empty calendar text
+            type: text
+          - name: publicCalendarUrl
+            label: Public Google Calendar URL
+            type: string
+          - name: calendarActionLabel
+            label: Calendar link text
+            type: string
+          - name: upcomingEvents
+            label: Upcoming public events
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{month} {day} — {title}"
+            fields:
+              - name: month
+                label: Month abbreviation
+                type: string
+              - name: day
+                label: Day
+                type: string
+              - name: type
+                label: Event type
+                type: string
+              - name: title
+                label: Event title
+                type: string
+              - name: location
+                label: Location
+                type: string
+              - name: actionLabel
+                label: Event link text
+                type: string
+              - name: actionUrl
+                label: Event link path
+                type: string
+          - name: memberTitle
+            label: Member calendar heading
+            type: string
+          - name: memberText
+            label: Member calendar text
+            type: text
+          - name: contactActionLabel
+            label: Event contact link text
+            type: string
+          - name: contactActionUrl
+            label: Event contact link URL
+            type: string
+          - name: boardEyebrow
+            label: Board small heading
+            type: string
+          - name: boardTitle
+            label: Board heading
+            type: string
+          - name: boardIntroduction
+            label: Board introduction
+            type: text
+          - name: people
+            label: People
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{name} — {role}"
+            fields:
+              - name: name
+                label: Name
+                type: string
+              - name: role
+                label: Role
+                type: string
+              - name: group
+                label: Group
                 type: string
               - name: image
-                label: Slide image
+                label: Portrait
                 type: image
-                required: true
-          - name: newsletterTitle
-            label: Newsletter title
+              - name: imageAlt
+                label: Portrait description
+                type: string
+              - name: active
+                label: Show on website
+                type: boolean
+                default: true
+          - name: partners
+            label: Partners
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{name}"
+            fields:
+              - name: name
+                label: Organization name
+                type: string
+              - name: image
+                label: Logo
+                type: image
+              - name: imageAlt
+                label: Logo description
+                type: string
+          - name: galleryLabel
+            label: Gallery accessible label
             type: string
-          - name: newsletterText
-            label: Newsletter text
+          - name: openImageLabel
+            label: Open image accessible label
+            type: string
+          - name: images
+            label: Gallery photos
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{caption}"
+            fields:
+              - name: image
+                label: Photo
+                type: image
+              - name: alt
+                label: Photo description
+                type: string
+              - name: caption
+                label: Caption
+                type: string
+          - name: formEyebrow
+            label: Form small heading
+            type: string
+          - name: formTitle
+            label: Form heading
+            type: string
+          - name: formIntroduction
+            label: Form introduction
             type: text
-          - name: newsletterUrl
-            label: Newsletter link
+          - name: formEndpoint
+            label: Public secure gateway URL
             type: string
-          - name: recapTitle
-            label: Recap title
+            description: Leave blank until the Cloudflare Worker or equivalent gateway is ready.
+          - name: emailAddress
+            label: Chapter email
             type: string
-          - name: recapText
-            label: Recap text
+          - name: emailActionLabel
+            label: Email link text
+            type: string
+          - name: topicLabel
+            label: Topic field label
+            type: string
+          - name: topicOptions
+            label: Topic options
+            type: string
+            list: true
+          - name: audienceLabel
+            label: Audience field label
+            type: string
+          - name: audienceOptions
+            label: Audience options
+            type: string
+            list: true
+          - name: nameLabel
+            label: Name field label
+            type: string
+          - name: emailLabel
+            label: Email field label
+            type: string
+          - name: phoneLabel
+            label: Phone field label
+            type: string
+          - name: organizationLabel
+            label: Organization field label
+            type: string
+          - name: preferredDateLabel
+            label: Preferred date field label
+            type: string
+          - name: neighborhoodLabel
+            label: Neighborhood field label
+            type: string
+          - name: messageLabel
+            label: Message field label
+            type: string
+          - name: privacyWarning
+            label: Privacy warning
             type: text
-          - name: aboutText
-            label: About Penn KDSAP
-            type: text
-          - name: contactText
-            label: Contact prompt
+          - name: submitLabel
+            label: Submit button text
             type: string
-      - name: gallery
-        label: Gallery
-        type: file
-        path: content/gallery.json
-        format: json
-        operations:
-          delete: false
-        fields:
-          - name: title
-            label: Page title
-            type: string
-            required: true
-          - name: introduction
-            label: Introduction
+          - name: unavailableMessage
+            label: Gateway unavailable message
             type: text
-            required: true
-  - name: archived-pages
-    label: All other site pages
-    type: collection
-    path: site-html-archive/pages
-    format: code
-    exclude:
-      - index.html
-      - gallery.html
-    operations:
-      create: false
-      rename: false
-      delete: false
+          - name: successMessage
+            label: Submission success message
+            type: text
+          - name: errorMessage
+            label: Submission error message
+            type: text

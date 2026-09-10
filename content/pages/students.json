@@ -1,0 +1,18 @@
+{
+  "pageTitle": "For Students | Penn KDSAP",
+  "metaDescription": "Explore Penn KDSAP service, training, education, and student development opportunities.",
+  "eyebrow": "For Penn students",
+  "title": "Learn through service, teamwork, and community partnership",
+  "summary": "Penn KDSAP gives undergraduates a structured way to support community programs while learning from peers and physicians.",
+  "heroImage": "/images/reel/volunteer-training.webp",
+  "heroImageAlt": "Penn students gathered around a volunteer training demonstration",
+  "sectionEyebrow": "Student experience",
+  "sectionTitle": "Three connected parts of membership",
+  "objectives": [
+    { "title": "Community service", "text": "Support screening and education events organized with Philadelphia community partners." },
+    { "title": "Training", "text": "Prepare for volunteer responsibilities through student-led and clinician-supported instruction." },
+    { "title": "Development", "text": "Build relationships with peers, explore health careers, and contribute through committees and leadership." }
+  ],
+  "actionLabel": "Ask about joining Penn KDSAP",
+  "actionUrl": "../contact-us/"
+}

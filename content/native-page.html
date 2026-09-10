@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{{META_DESCRIPTION}}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="{{SITE_NAME}}">
+    <meta property="og:title" content="{{PAGE_TITLE}}">
+    <meta property="og:description" content="{{META_DESCRIPTION}}">
+    <meta property="og:image" content="https://akashdubey.me/penn-kdsap/images/penn-kdsap-og.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://akashdubey.me/penn-kdsap/images/penn-kdsap-og.png">
+    <title>{{PAGE_TITLE}}</title>
+    <link rel="icon" href="../favicon.png" type="image/png">
+    <link rel="stylesheet" href="../css/site.css">
+  </head>
+  <body class="interior-page">
+    <a class="skip-link" href="#main">{{SKIP_LINK_TEXT}}</a>
+    <header class="site-header is-scrolled" data-header>
+      <div class="header-inner">
+        <a class="brand" href="../" aria-label="{{BRAND_ALT}}">
+          <img src="../images/penn-kdsap-logo.png" alt="{{BRAND_ALT}}" width="1030" height="316">
+        </a>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-navigation">
+          <span class="menu-button-label">{{MENU_LABEL}}</span>
+          <span class="menu-icon" aria-hidden="true"></span>
+        </button>
+        <nav class="site-navigation" id="site-navigation" aria-label="{{PRIMARY_NAVIGATION_LABEL}}">
+          {{NAVIGATION}}
+        </nav>
+        <a class="header-action" href="../{{HEADER_ACTION_URL}}">{{HEADER_ACTION_LABEL}}</a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="page-hero" aria-labelledby="page-title">
+        <img src="../{{HERO_IMAGE}}" alt="{{HERO_IMAGE_ALT}}" width="1400" height="933" fetchpriority="high">
+        <div class="page-hero-shade"></div>
+        <div class="shell page-hero-content">
+          <p class="eyebrow">{{HERO_EYEBROW}}</p>
+          <h1 id="page-title">{{HERO_TITLE}}</h1>
+          <p>{{HERO_SUMMARY}}</p>
+        </div>
+      </section>
+      {{PAGE_BODY}}
+      <section class="contact-band" aria-labelledby="contact-title" data-reveal>
+        <div class="shell contact-band-inner">
+          <div>
+            <p class="eyebrow">{{CONTACT_EYEBROW}}</p>
+            <h2 id="contact-title">{{CONTACT_TITLE}}</h2>
+            <p>{{CONTACT_TEXT}}</p>
+          </div>
+          <a class="button button-light" href="../{{CONTACT_ACTION_URL}}">{{CONTACT_ACTION_LABEL}}</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div class="footer-brand">
+          <img src="../images/penn-kdsap-logo.png" alt="{{BRAND_ALT}}" width="1030" height="316" loading="lazy">
+          <p>{{FOOTER_DESCRIPTION}}</p>
+        </div>
+        <div><h2>{{FOOTER_EXPLORE_HEADING}}</h2>{{FOOTER_EXPLORE_LINKS}}</div>
+        <div><h2>{{FOOTER_CONNECT_HEADING}}</h2>{{FOOTER_CONNECT_LINKS}}</div>
+      </div>
+      <div class="shell footer-bottom">
+        <p>© {{CURRENT_YEAR}} {{FOOTER_COPYRIGHT}}</p>
+        <p>{{FOOTER_AFFILIATION}}</p>
+      </div>
+    </footer>
+    <script src="../js/site.js"></script>
+  </body>
+</html>

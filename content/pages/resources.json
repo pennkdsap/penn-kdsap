@@ -1,0 +1,18 @@
+{
+  "pageTitle": "Health Education | Penn KDSAP",
+  "metaDescription": "Explore Penn KDSAP’s community health education activities and kidney awareness resources.",
+  "eyebrow": "Health education",
+  "title": "Kidney health learning designed for community settings",
+  "summary": "Penn KDSAP volunteers and physicians share general educational materials through presentations, screening stations, and community workshops.",
+  "heroImage": "/images/reel/training-discussion.webp",
+  "heroImageAlt": "A Penn KDSAP volunteer leading a training discussion",
+  "sectionEyebrow": "Programs",
+  "sectionTitle": "Education in action",
+  "sectionText": "These examples describe chapter activities and do not provide medical advice or replace care from a qualified clinician.",
+  "initiatives": [
+    { "title": "CKD education", "text": "Volunteers share general information about chronic kidney disease during community events and screening activities." },
+    { "title": "Nutrition education", "text": "Partner-led demonstrations and materials help make health education practical and approachable." },
+    { "title": "Student outreach", "text": "Interactive workshops introduce younger students to kidney anatomy, physiology, and health careers." }
+  ],
+  "disclaimer": "For personal medical questions, speak with a licensed health professional. For an emergency, call 911."
+}

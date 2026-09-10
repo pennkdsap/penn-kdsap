@@ -1,4 +1,5 @@
 {
+  "packageManager": "bun@1.4.0",
   "name": "penn-kdsap",
   "private": true,
   "version": "1.0.0",
@@ -13,10 +14,13 @@
     "verify:site": "npm run build && node scripts/verify-site.mjs"
   },
   "devDependencies": {
-    "@types/node": "^24.3.0",
     "@astrojs/check": "^0.9.4",
+    "@types/node": "^24.3.0",
     "astro": "^5.13.5",
     "playwright": "^1.55.0",
     "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "leaflet": "^1.9.4"
   }
 }

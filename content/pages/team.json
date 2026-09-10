@@ -1,0 +1,23 @@
+{
+  "pageTitle": "Team | Penn KDSAP",
+  "metaDescription": "Meet the Penn KDSAP student executive board.",
+  "eyebrow": "Our team",
+  "title": "Students leading service at Penn KDSAP",
+  "summary": "The executive board coordinates chapter operations, community relationships, education, programming, and volunteer development.",
+  "heroImage": "/images/slide-volunteers-1400.webp",
+  "heroImageAlt": "Penn KDSAP student volunteers working together",
+  "boardEyebrow": "Executive board",
+  "boardTitle": "Meet the student leaders",
+  "boardIntroduction": "Meet the student leaders coordinating chapter operations, community partnerships, education, programming, and volunteer development.",
+  "people": [
+    { "name": "Sneha Chandrashekar", "role": "Co-President", "group": "Student Board", "image": "/images/team/sneha-chandrashekar.webp", "imageAlt": "Portrait of Sneha Chandrashekar", "active": true },
+    { "name": "Isha Patkar", "role": "Co-President", "group": "Student Board", "image": "/images/team/isha-patkar.webp", "imageAlt": "Portrait of Isha Patkar", "active": true },
+    { "name": "Hannah Lee", "role": "Vice President of Clinical Operations", "group": "Student Board", "image": "/images/team/hannah-lee.webp", "imageAlt": "Portrait of Hannah Lee", "active": true },
+    { "name": "Divyash Shah", "role": "Vice President of Clinical Operations", "group": "Student Board", "image": "/images/team/divyash-shah.webp", "imageAlt": "Portrait of Divyash Shah", "active": true },
+    { "name": "Vyas Dhar", "role": "Vice President of Finance", "group": "Student Board", "image": "/images/team/vyas-dhar.webp", "imageAlt": "Portrait of Vyas Dhar", "active": true },
+    { "name": "Ray Ma", "role": "Director of Community Outreach", "group": "Student Board", "image": "/images/team/ray-ma.webp", "imageAlt": "Portrait of Ray Ma", "active": true },
+    { "name": "Nandini Shah", "role": "Director of Health Education", "group": "Student Board", "image": "/images/team/nandini-shah.webp", "imageAlt": "Portrait of Nandini Shah", "active": true },
+    { "name": "Ishani Modi", "role": "Director of Programming and Physician Relations", "group": "Student Board", "image": "/images/team/ishani-modi.webp", "imageAlt": "Portrait of Ishani Modi", "active": true },
+    { "name": "Kush Parikh", "role": "Director of Public Relations and Marketing", "group": "Student Board", "image": "/images/team/kush-parikh.webp", "imageAlt": "Portrait of Kush Parikh", "active": true }
+  ]
+}

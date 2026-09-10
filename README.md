@@ -29,10 +29,8 @@ npm run screenshots -- --output site-screenshots --width 1280
 
 ## Editing content with Pages CMS
 
-The homepage and Gallery introduction are managed in `content/`. Editors can use [Pages CMS](https://app.pagescms.org/) instead of editing files: sign in with GitHub, install the Pages CMS GitHub App for the [Penn KDSAP repository](https://github.com/AkeBoss-tech/penn-kdsap), and select **Website pages**. Saving changes commits them to `main`, which automatically publishes the update through GitHub Pages.
+All published page copy, homepage sections, impact figures, map locations, events, leadership members, links, and image descriptions are managed in `content/`. Editors can use [Pages CMS](https://app.pagescms.org/) instead of editing files: sign in with GitHub, install the Pages CMS GitHub App for the [Penn KDSAP repository](https://github.com/AkeBoss-tech/penn-kdsap), and select **Website pages**. Saving changes commits them to `main`, which automatically publishes the update through GitHub Pages.
 
-The CMS controls the homepage carousel, newsletter, recap, introductory copy, and Gallery title/introduction. The remaining 19 pages are also available in **All other site pages** and preserve their exact page source so their current layouts remain intact. To access it, the repository owner must complete the one-time Pages CMS GitHub App installation. Editors can either sign in with GitHub and receive repository access, or be invited by email from Pages CMS to edit content and media without a GitHub account.
+The CMS provides dedicated **Homepage**, **Leadership team**, and **Events and calendar** editors. All remaining native pages appear under **Other website pages**. Leadership members and events are reorderable cards; editors can add items, update titles and photos, or hide a saved leadership member without deleting their information.
 
-Images uploaded through Pages CMS are stored in `public/images`.
-
-For the 19 archived pages, use a technical editor or an AI coding tool: their exact markup is exposed in Pages CMS to preserve screenshot-level fidelity. The homepage and Gallery are safe form-based editors today. Converting every individual archived page into friendly field-level controls remains a page-by-page template migration. See [AI_EDITING.md](AI_EDITING.md) for the collaboration and review workflow, including how to use ChatGPT or Claude safely.
+Images uploaded through Pages CMS are stored in `public/images`. See [CMS_EDITOR_GUIDE.md](docs/CMS_EDITOR_GUIDE.md) for the routine editing and publishing workflow.

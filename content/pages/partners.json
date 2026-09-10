@@ -1,0 +1,20 @@
+{
+  "pageTitle": "Partners | Penn KDSAP",
+  "metaDescription": "Meet the clinical, university, and community partners connected with Penn KDSAP.",
+  "eyebrow": "Our partners",
+  "title": "Collaboration makes community work possible",
+  "summary": "Penn KDSAP works alongside clinical teams, university groups, and community organizations.",
+  "heroImage": "/images/slide-community-1400.webp",
+  "heroImageAlt": "Penn KDSAP members gathered with community partners",
+  "sectionEyebrow": "Partner network",
+  "sectionTitle": "Organizations connected to the chapter",
+  "partners": [
+    { "name": "Penn Medicine Renal-Electrolyte and Hypertension Division, Penn Nephrology, and Penn Endocrinology", "image": "", "imageAlt": "" },
+    { "name": "Penn Medicine CAREs", "image": "/images/wix/f404ed_20f4d289a760424c80261efd78de266f~mv2.png", "imageAlt": "Penn Medicine CAREs logo" },
+    { "name": "National Kidney Foundation", "image": "/images/wix/f404ed_8a83ed03c80041398901d505a00b9637~mv2.png", "imageAlt": "National Kidney Foundation logo" },
+    { "name": "Penn Undergraduate Health Coalition", "image": "/images/wix/f404ed_91cb35d36f484f85810d413ece5c4664~mv2.png", "imageAlt": "Penn Undergraduate Health Coalition logo" },
+    { "name": "ServiceLink", "image": "/images/wix/d07601_b1edd88636894c45927c2503b9b5e45d~mv2.avif", "imageAlt": "ServiceLink logo" },
+    { "name": "Bebashi", "image": "/images/wix/d07601_75032062ecff404eaf6a26d7f66c8145~mv2.png", "imageAlt": "Bebashi logo" },
+    { "name": "Medical Interpreters at Penn", "image": "/images/wix/d07601_bb196f79324746449b26bb7e8fe018df~mv2.png", "imageAlt": "Medical Interpreters at Penn logo" }
+  ]
+}

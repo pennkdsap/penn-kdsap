@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{{META_DESCRIPTION}}">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="{{SITE_NAME}}">
+    <meta property="og:title" content="{{PAGE_TITLE}}">
+    <meta property="og:description" content="{{META_DESCRIPTION}}">
+    <meta property="og:image" content="https://akashdubey.me/penn-kdsap/images/penn-kdsap-og.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="https://akashdubey.me/penn-kdsap/images/penn-kdsap-og.png">
+    <title>{{PAGE_TITLE}}</title>
+    <link rel="icon" href="favicon.png" type="image/png">
+    <link rel="preload" as="image" href="{{HERO_IMAGE}}" type="image/webp" fetchpriority="high">
+    <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+    <link rel="stylesheet" href="css/site.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{{SKIP_LINK_TEXT}}</a>
+    <header class="site-header" data-header>
+      <div class="header-inner">
+        <a class="brand" href="./" aria-label="{{BRAND_ALT}}">
+          <img src="images/penn-kdsap-logo.png" alt="{{BRAND_ALT}}" width="1030" height="316">
+        </a>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="site-navigation">
+          <span class="menu-button-label">{{MENU_LABEL}}</span>
+          <span class="menu-icon" aria-hidden="true"></span>
+        </button>
+        <nav class="site-navigation" id="site-navigation" aria-label="{{PRIMARY_NAVIGATION_LABEL}}">
+          {{NAVIGATION}}
+        </nav>
+        <a class="header-action" href="{{HEADER_ACTION_URL}}">{{HEADER_ACTION_LABEL}}</a>
+      </div>
+    </header>
+
+    <main id="main">
+      <section class="hero" aria-labelledby="hero-title">
+        <img class="hero-image" src="{{HERO_IMAGE}}" alt="{{HERO_IMAGE_ALT}}" width="1800" height="1200" fetchpriority="high">
+        <div class="hero-shade"></div>
+        <div class="shell hero-content">
+          <p class="eyebrow">{{HERO_EYEBROW}}</p>
+          <h1 id="hero-title">{{HERO_TITLE}}</h1>
+          <p class="hero-summary">{{HERO_SUMMARY}}</p>
+          <div class="hero-actions" aria-label="{{HERO_ACTIONS_LABEL}}">
+            <a class="button button-primary" href="{{HERO_PRIMARY_URL}}">{{HERO_PRIMARY_LABEL}}</a>
+            <a class="button button-secondary" href="{{HERO_SECONDARY_URL}}">{{HERO_SECONDARY_LABEL}}</a>
+          </div>
+          <a class="student-link" href="{{HERO_STUDENT_URL}}">{{HERO_STUDENT_LABEL}} <span aria-hidden="true">→</span></a>
+        </div>
+      </section>
+
+      <section class="audience-paths section" aria-labelledby="paths-title" data-reveal>
+        <div class="shell">
+          <div class="section-heading">
+            <p class="eyebrow eyebrow-dark">{{PATHWAYS_EYEBROW}}</p>
+            <h2 id="paths-title">{{PATHWAYS_TITLE}}</h2>
+            <p>{{PATHWAYS_INTRODUCTION}}</p>
+          </div>
+          <div class="path-grid">
+            {{PATHWAY_ITEMS}}
+          </div>
+        </div>
+      </section>
+
+      <section class="photo-reel" aria-label="{{PHOTO_REEL_LABEL}}" data-reveal>
+        <div class="shell photo-reel-heading">
+          <p>{{PHOTO_REEL_LABEL}}</p>
+          <span aria-hidden="true">↘</span>
+        </div>
+        <div class="photo-track">
+          {{PHOTO_REEL_IMAGES}}
+        </div>
+      </section>
+
+      <section class="impact-section section" aria-labelledby="impact-title" data-reveal>
+        <div class="shell">
+          <div class="impact-heading">
+            <div>
+              <p class="eyebrow">{{IMPACT_EYEBROW}}</p>
+              <h2 id="impact-title">{{IMPACT_TITLE}}</h2>
+            </div>
+            <div>
+              <p>{{IMPACT_INTRODUCTION}}</p>
+              <a class="impact-source" href="{{IMPACT_SOURCE_URL}}">{{IMPACT_SOURCE_LABEL}} <span aria-hidden="true">→</span></a>
+            </div>
+          </div>
+          <div class="impact-grid">
+            {{IMPACT_ITEMS}}
+          </div>
+        </div>
+      </section>
+
+      <section class="locations-events section" aria-labelledby="locations-title" data-reveal>
+        <div class="shell">
+          <div class="section-heading locations-heading">
+            <p class="eyebrow eyebrow-dark">{{MAP_EYEBROW}}</p>
+            <h2 id="locations-title">{{MAP_TITLE}}</h2>
+            <p>{{MAP_INTRODUCTION}}</p>
+          </div>
+          <div class="locations-events-grid">
+            <div class="screening-map-layout">
+              <div class="screening-map" role="group" aria-label="{{MAP_LABEL}}" data-screening-map>
+                <p class="map-fallback" data-map-fallback>{{MAP_FALLBACK_TEXT}}</p>
+                {{MAP_PINS}}
+              </div>
+              <ol class="map-site-list" aria-label="{{MAP_LIST_LABEL}}">
+                {{MAP_SITE_ITEMS}}
+              </ol>
+            </div>
+            <aside class="quick-events" aria-labelledby="quick-events-title">
+              <p class="eyebrow">{{EVENTS_EYEBROW}}</p>
+              <h2 id="quick-events-title">{{EVENTS_TITLE}}</h2>
+              <p class="quick-events-intro">{{EVENTS_INTRODUCTION}}</p>
+              <div class="event-list">{{EVENT_ITEMS}}</div>
+              <a class="quick-events-link" href="{{EVENTS_ACTION_URL}}">{{EVENTS_ACTION_LABEL}} <span aria-hidden="true">→</span></a>
+            </aside>
+          </div>
+          <a class="map-source text-link" href="{{MAP_SOURCE_URL}}">{{MAP_SOURCE_LABEL}} <span aria-hidden="true">→</span></a>
+        </div>
+      </section>
+
+      <section class="mission section" aria-labelledby="mission-title" data-reveal>
+        <div class="shell mission-grid">
+          <div class="mission-image-wrap">
+            <img src="{{MISSION_IMAGE}}" alt="{{MISSION_IMAGE_ALT}}" width="1400" height="933" loading="lazy">
+            <p class="image-caption">{{MISSION_IMAGE_CAPTION}}</p>
+          </div>
+          <div class="mission-copy">
+            <p class="eyebrow eyebrow-dark">{{MISSION_EYEBROW}}</p>
+            <h2 id="mission-title">{{MISSION_TITLE}}</h2>
+            <p>{{MISSION_TEXT}}</p>
+            <a class="text-link" href="{{MISSION_ACTION_URL}}">{{MISSION_ACTION_LABEL}} <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </section>
+
+      <section class="field-notes section" aria-labelledby="field-notes-title" data-reveal>
+        <div class="shell">
+          <div class="section-heading section-heading-row">
+            <div>
+              <p class="eyebrow eyebrow-dark">{{STORIES_EYEBROW}}</p>
+              <h2 id="field-notes-title">{{STORIES_TITLE}}</h2>
+            </div>
+            <a class="text-link" href="{{STORIES_ACTION_URL}}">{{STORIES_ACTION_LABEL}} <span aria-hidden="true">→</span></a>
+          </div>
+          <div class="story-grid">
+            {{STORY_ITEMS}}
+          </div>
+        </div>
+      </section>
+
+      <section class="contact-band" aria-labelledby="contact-title" data-reveal>
+        <div class="shell contact-band-inner">
+          <div>
+            <p class="eyebrow">{{CONTACT_EYEBROW}}</p>
+            <h2 id="contact-title">{{CONTACT_TITLE}}</h2>
+            <p>{{CONTACT_TEXT}}</p>
+          </div>
+          <a class="button button-light" href="{{CONTACT_ACTION_URL}}">{{CONTACT_ACTION_LABEL}}</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell footer-grid">
+        <div class="footer-brand">
+          <img src="images/penn-kdsap-logo.png" alt="{{BRAND_ALT}}" width="1030" height="316" loading="lazy">
+          <p>{{FOOTER_DESCRIPTION}}</p>
+        </div>
+        <div>
+          <h2>{{FOOTER_EXPLORE_HEADING}}</h2>
+          {{FOOTER_EXPLORE_LINKS}}
+        </div>
+        <div>
+          <h2>{{FOOTER_CONNECT_HEADING}}</h2>
+          {{FOOTER_CONNECT_LINKS}}
+        </div>
+      </div>
+      <div class="shell footer-bottom">
+        <p>© {{CURRENT_YEAR}} {{FOOTER_COPYRIGHT}}</p>
+        <p>{{FOOTER_AFFILIATION}}</p>
+      </div>
+    </footer>
+    <script src="vendor/leaflet/leaflet.js"></script>
+    <script src="js/site.js"></script>
+  </body>
+</html>

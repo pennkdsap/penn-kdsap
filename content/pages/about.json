@@ -1,0 +1,21 @@
+{
+  "pageTitle": "About | Penn KDSAP",
+  "metaDescription": "Learn how Penn KDSAP connects University of Pennsylvania students, physicians, and Philadelphia communities.",
+  "eyebrow": "About Penn KDSAP",
+  "title": "A student-led bridge between Penn and Philadelphia communities",
+  "summary": "Penn KDSAP brings students, physicians, and community organizations together around kidney health screening, education, and service.",
+  "heroImage": "/images/reel/community-consultation.webp",
+  "heroImageAlt": "Penn KDSAP volunteers speaking with community members at a screening",
+  "sections": [
+    {
+      "eyebrow": "Our chapter",
+      "title": "Local service within a nationwide movement",
+      "text": "Penn’s chapter was founded in 2017. Student volunteers from across the University work with physicians from Penn Medicine and community leaders throughout Philadelphia."
+    },
+    {
+      "eyebrow": "How we work",
+      "title": "Partnership comes before programming",
+      "text": "Community organizations help shape each collaboration. Penn KDSAP prepares volunteers, coordinates with clinicians, and brings screening and education activities into partner spaces."
+    }
+  ]
+}

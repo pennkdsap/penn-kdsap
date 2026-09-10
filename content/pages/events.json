@@ -1,0 +1,19 @@
+{
+  "pageTitle": "Events | Penn KDSAP",
+  "metaDescription": "Find public Penn KDSAP screening and community event information.",
+  "eyebrow": "Events",
+  "title": "Upcoming community events",
+  "summary": "Public screening and outreach details will appear here once they are confirmed for community sharing.",
+  "heroImage": "/images/reel/screening-team.webp",
+  "heroImageAlt": "Penn KDSAP volunteers together at a screening station",
+  "emptyEyebrow": "Public calendar",
+  "emptyTitle": "No public events are listed yet",
+  "emptyText": "The calendar is ready for the chapter’s public Google Calendar. Until it is connected, contact Penn KDSAP for upcoming screening information.",
+  "publicCalendarUrl": "",
+  "calendarActionLabel": "Open public calendar",
+  "upcomingEvents": [],
+  "memberTitle": "Penn member events",
+  "memberText": "Internal meetings, volunteer assignments, and private access details belong on the separately shared member calendar and are not published on this website.",
+  "contactActionLabel": "Ask about upcoming events",
+  "contactActionUrl": "../contact-us/"
+}

@@ -9,9 +9,21 @@ const sourceDirectory = join(root, 'site-html-archive/pages');
 const deploymentBase = '/penn-kdsap';
 const publicSiteUrl = 'https://akashdubey.me';
 const pages = (await readdir(sourceDirectory)).filter((file) => file.endsWith('.html')).sort();
+const nativeFiles = new Set([
+  'index.html', 'about.html', 'kidney-screenings.html', 'kdsap.html', 'calendar.html',
+  'health-education.html', 'meet-the-team.html', 'partners.html', 'contact-us.html',
+  'news.html', 'gallery.html',
+]);
+const redirects = {
+  'about-1.html': 'health-education', 'about-3.html': 'news', 'alumni.html': 'meet-the-team',
+  'blank-12.html': 'meet-the-team', 'chronic-kidney-disease.html': 'health-education',
+  'copy-of-2024-year-in-review.html': 'news', 'copy-of-student-development.html': 'kdsap',
+  'student-development.html': 'kdsap', 'the-student-council.html': 'meet-the-team',
+  'what-we-do.html': 'kidney-screenings',
+};
 const contentTypes = {
   '.css': 'text/css', '.html': 'text/html', '.js': 'text/javascript', '.json': 'application/json',
-  '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.svg': 'image/svg+xml', '.xml': 'application/xml',
+  '.avif': 'image/avif', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.svg': 'image/svg+xml', '.webp': 'image/webp', '.xml': 'application/xml',
 };
 
 function relativeFile(pathname) {
@@ -48,7 +60,8 @@ try {
       ? join(outputDirectory, 'index.html')
       : join(outputDirectory, route, 'index.html');
     const html = await readFile(htmlFile, 'utf8');
-    const canonical = `${publicSiteUrl}${deploymentBase}${route}`;
+    const canonicalRoute = redirects[file] ? `/${redirects[file]}/` : route;
+    const canonical = `${publicSiteUrl}${deploymentBase}${canonicalRoute}`;
     if ((html.match(/<link rel="canonical"/g) ?? []).length !== 1 || !html.includes(`href="${canonical}"`)) {
       issues.push(`${route}: canonical URL is missing or incorrect`);
     }
@@ -70,11 +83,21 @@ try {
         height: document.body.scrollHeight,
         needsMobileMenu: Boolean(document.querySelector('#comp-j91nuigk')),
         mobileMenu: Boolean(document.querySelector('.mobile-menu-toggle')),
+        nativeMenu: Boolean(document.querySelector('.menu-button')),
+        h1Count: document.querySelectorAll('h1').length,
+        unresolvedFields: document.documentElement.innerHTML.includes('{{'),
+        brokenImages: [...document.images].filter((image) => image.complete && image.naturalWidth === 0).map((image) => image.getAttribute('src')),
         loginVisible: [...document.querySelectorAll('button')].some((element) => element.textContent?.includes('Log In') && element.getClientRects().length > 0),
       }));
       if (response?.status() !== 200 || result.height < 1) issues.push(`${viewport.name} ${route}: page did not render`);
+      if (nativeFiles.has(file) && (result.h1Count !== 1 || result.unresolvedFields || result.brokenImages.length)) {
+        issues.push(`${viewport.name} ${route}: native structure or assets failed (${result.brokenImages.join(', ')})`);
+      }
       if (viewport.name === 'mobile' && (result.scrollWidth > result.width || (result.needsMobileMenu && !result.mobileMenu) || result.loginVisible)) {
         issues.push(`${viewport.name} ${route}: responsive navigation or layout failed`);
+      }
+      if (viewport.name === 'mobile' && nativeFiles.has(file) && !result.nativeMenu) {
+        issues.push(`${viewport.name} ${route}: native mobile menu is missing`);
       }
     }
     await page.close();

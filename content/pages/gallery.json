@@ -1,0 +1,46 @@
+{
+  "pageTitle": "Gallery | Penn KDSAP",
+  "metaDescription": "See Penn KDSAP students, clinicians, and community partners in action at screenings and volunteer training.",
+  "eyebrow": "Photo gallery",
+  "title": "Service, learning, and partnership in action",
+  "summary": "A visual record of the people and preparation behind Penn KDSAP’s community work.",
+  "heroImage": "/images/reel/screening-team.webp",
+  "heroImageAlt": "Penn KDSAP volunteers gathered at a community screening station",
+  "sectionEyebrow": "From the field",
+  "sectionTitle": "Inside Penn KDSAP",
+  "sectionText": "Select a photograph to view it at a larger size.",
+  "galleryLabel": "Penn KDSAP community screening and volunteer training photographs",
+  "openImageLabel": "Open full-size photograph",
+  "images": [
+    {
+      "image": "/images/reel/screening-check.webp",
+      "alt": "A Penn KDSAP volunteer assists at a community screening station",
+      "caption": "Community screening"
+    },
+    {
+      "image": "/images/reel/community-consultation.webp",
+      "alt": "Penn KDSAP volunteers speak with community members in a brightly colored room",
+      "caption": "Community partnership"
+    },
+    {
+      "image": "/images/reel/volunteer-training.webp",
+      "alt": "Penn students gather around a hands-on volunteer training demonstration",
+      "caption": "Volunteer preparation"
+    },
+    {
+      "image": "/images/reel/screening-team.webp",
+      "alt": "Four Penn KDSAP volunteers stand together behind a screening table",
+      "caption": "Screening team"
+    },
+    {
+      "image": "/images/reel/training-discussion.webp",
+      "alt": "A Penn KDSAP volunteer leads a small-group training discussion",
+      "caption": "Peer learning"
+    },
+    {
+      "image": "/images/reel/blood-pressure-training.webp",
+      "alt": "Penn students practice taking blood pressure during volunteer training",
+      "caption": "Clinical skills practice"
+    }
+  ]
+}
