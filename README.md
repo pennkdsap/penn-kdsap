@@ -34,3 +34,7 @@ All published page copy, homepage sections, impact figures, map locations, event
 The CMS provides dedicated **Homepage**, **Leadership team**, and **Events and calendar** editors. All remaining native pages appear under **Other website pages**. Leadership members and events are reorderable cards; editors can add items, update titles and photos, or hide a saved leadership member without deleting their information.
 
 Images uploaded through Pages CMS are stored in `public/images`. See [CMS_EDITOR_GUIDE.md](docs/CMS_EDITOR_GUIDE.md) for the routine editing and publishing workflow.
+
+## Analytics
+
+The public site uses PostHog for pageviews and a small set of conversion events: screening-request clicks, Google Calendar opens and subscriptions, and successful contact-form submissions. Autocapture and session recording are disabled, and form field values are never sent to PostHog. Analytics is disabled on `localhost` and `127.0.0.1` so local development does not affect production data.

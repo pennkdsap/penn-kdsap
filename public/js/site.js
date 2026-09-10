@@ -7,6 +7,15 @@
   const header = document.querySelector('[data-header]');
   const themeButton = document.querySelector('[data-theme-toggle]');
   const colorScheme = window.matchMedia('(prefers-color-scheme: dark)');
+  const captureAnalytics = (event, properties = {}) => window.posthog?.capture?.(event, properties);
+  document.addEventListener('click', (clickEvent) => {
+    const target = clickEvent.target instanceof Element ? clickEvent.target.closest('[data-analytics-event]') : null;
+    if (!target) return;
+    const properties = {};
+    if (target.dataset.analyticsLocation) properties.location = target.dataset.analyticsLocation;
+    if (target.dataset.analyticsCalendar) properties.calendar = target.dataset.analyticsCalendar;
+    captureAnalytics(target.dataset.analyticsEvent, properties);
+  });
   const applyTheme = (theme, persist = false) => {
     document.documentElement.dataset.theme = theme;
     if (persist) try { localStorage.setItem('penn-kdsap-theme', theme); } catch { /* Storage may be unavailable. */ }
@@ -177,6 +186,7 @@
         body: JSON.stringify(Object.fromEntries(new FormData(contactForm))),
       });
       if (!response.ok) throw new Error('Submission failed');
+      captureAnalytics('contact_form_submitted', { form: 'contact' });
       contactForm.reset();
       status.textContent = contactForm.dataset.successMessage || '';
     } catch {
