@@ -3,15 +3,15 @@
   "metaDescription": "Learn what to expect from a Penn KDSAP community kidney health screening or request a screening for your organization.",
   "eyebrow": "Community screenings",
   "title": "Free screenings built with local partners",
-  "summary": "Trained Penn student volunteers and supervising physicians bring screening activities, education, and on-site consultation to community locations.",
+  "summary": "Trained Penn student volunteers and supervising physicians bring screening activities, education, and free on-site consultation with a Penn Medicine physician to community locations.",
   "heroImage": "/images/hero-1800.webp",
   "heroImageAlt": "Penn KDSAP volunteers working at a community screening",
   "journeyEyebrow": "What to expect",
   "journeyTitle": "A screening, step by step",
-  "journeyIntroduction": "Trained student volunteers guide participants through a series of stations, with physicians on site to supervise and discuss results.",
+  "journeyIntroduction": "Trained student volunteers guide participants through a series of stations, with Penn Medicine physicians on site to supervise and provide free consultations.",
   "journeyGraphicTitle": "The Penn KDSAP screening journey",
-  "journeyGraphicDescription": "An animated path connects eight stages from welcome and registration through a physician conversation and next steps.",
-  "journeyDisclaimer": "The exact stations and services can vary by event. Screening information supports an on-site physician conversation and is not a diagnosis by itself.",
+  "journeyGraphicDescription": "An animated path connects eight stages from welcome and registration through a physician consultation and next steps.",
+  "journeyDisclaimer": "The order of stations can vary by event. Screening information supports an on-site physician consultation and is not a diagnosis by itself.",
   "journeySteps": [
     { "number": "01", "title": "Welcome and registration", "text": "Check in with the team and learn how the screening will flow.", "icon": "clipboard" },
     { "number": "02", "title": "Medical history", "text": "Share relevant health and family-history information with a trained volunteer.", "icon": "history" },
@@ -20,16 +20,16 @@
     { "number": "05", "title": "Urinalysis", "text": "A urine dipstick screens for findings such as protein that may merit follow-up.", "icon": "urine" },
     { "number": "06", "title": "Blood glucose", "text": "A glucose measurement provides information related to diabetes risk.", "icon": "glucose" },
     { "number": "07", "title": "Health education", "text": "Review practical, plain-language kidney-health information and resources.", "icon": "education" },
-    { "number": "08", "title": "Physician conversation", "text": "Discuss the screening information and appropriate next steps with an on-site physician.", "icon": "doctor" }
+    { "number": "08", "title": "Physician consultation", "text": "Receive a free consultation with an on-site Penn Medicine physician to discuss your screening information and appropriate next steps.", "icon": "doctor" }
   ],
   "sectionEyebrow": "Bring us to your community",
   "sectionTitle": "A screening starts with a local partnership",
-  "sectionText": "Each event is coordinated with the host organization. Available stations and services may vary by event, and visitors receive instructions from the screening team on site.",
+  "sectionText": "Each event is coordinated with the host organization. The order of stations can vary by event, and visitors receive instructions from the screening team on site.",
   "steps": [
     { "number": "01", "title": "Welcome", "text": "Volunteers explain the event flow and help visitors begin the screening process." },
     { "number": "02", "title": "Screening stations", "text": "Trained students support the measurements and activities planned for that event under clinical supervision." },
     { "number": "03", "title": "Health education", "text": "Visitors can review plain-language kidney health information and ask general questions." },
-    { "number": "04", "title": "Physician consultation", "text": "When included in the event, a physician discusses results and appropriate next steps directly with the visitor." }
+    { "number": "04", "title": "Physician consultation", "text": "A Penn Medicine physician provides a free consultation to discuss results and appropriate next steps directly with the visitor." }
   ],
   "actionLabel": "Request a community screening",
   "actionUrl": "../contact-us/"

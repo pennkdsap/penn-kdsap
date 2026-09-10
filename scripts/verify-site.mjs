@@ -143,12 +143,12 @@ try {
     await contact.scrollIntoViewIfNeeded();
     await contact.focus();
     await contact.hover();
-    await interactions.waitForFunction(() => getComputedStyle(document.querySelector('.contact-band .button-light')).backgroundColor === 'rgb(231, 237, 244)');
+    await interactions.waitForFunction(() => getComputedStyle(document.querySelector('.contact-band .button-light')).backgroundColor === 'rgb(255, 240, 226)');
     const colors = await contact.evaluate((element) => {
       const style = getComputedStyle(element);
       return [style.color, style.backgroundColor];
     });
-    if (colors[0] !== 'rgb(7, 31, 61)' || colors[1] !== 'rgb(231, 237, 244)') issues.push(`${theme}: contact hover colors are incorrect (${colors.join(", ")})`);
+    if (colors[0] !== 'rgb(124, 53, 20)' || colors[1] !== 'rgb(255, 240, 226)') issues.push(`${theme}: contact hover colors are incorrect (${colors.join(", ")})`);
     const toggle = interactions.locator('[data-theme-toggle]');
     await toggle.focus();
     await toggle.press('Enter');

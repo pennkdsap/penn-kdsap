@@ -2,9 +2,15 @@
 
 ## First-time connection
 
-1. Sign in at [Pages CMS](https://app.pagescms.org/) with the GitHub account that can access `AkeBoss-tech/penn-kdsap`.
+1. Sign in at [Pages CMS](https://app.pagescms.org/) with the GitHub account that can access `pennkdsap/penn-kdsap`.
 2. Install or authorize the Pages CMS GitHub App for that repository.
 3. Open **Website pages**. A saved change commits to `main`, and GitHub Pages publishes it automatically.
+
+## Editors using email
+
+After the repository owner connects the GitHub App, they can invite the chapter email as a collaborator in Pages CMS. Open [Pages CMS](https://app.pagescms.org/), choose **Continue with email**, and use the sign-in link sent to the invited mailbox. A Gmail session alone does not grant repository access.
+
+Email collaborators can edit content and images in the invited repository; managing collaborators and CMS configuration requires the GitHub account with repository access.
 
 ## Add or update a leadership member
 
