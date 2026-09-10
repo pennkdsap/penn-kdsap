@@ -32,6 +32,10 @@ Use a vertical portrait when possible. The site displays portraits at a 2:3 rati
 
 The full list appears on the Events page. The first three items automatically appear in the homepage quick calendar.
 
+The website uses **Penn KDSAP — Community Events** and **Penn KDSAP — Member Events**, both owned by Akash. The chapter account, `pennkdsap@gmail.com`, has been invited to edit events on both calendars. Open each invitation in that account to add it to the calendar list. Ownership remains with Akash.
+
+The Events editor includes separate public feed, calendar link, and subscription link fields for each calendar. Changes made in Google Calendar are pulled into the site by its daily rebuild.
+
 To link a Google Calendar, make a separate public-facing calendar and paste its **Public URL to this calendar** into **Public Google Calendar URL**. Paste its **Public address in iCal format** into **Public iCal feed URL**. Never paste the Secret address in iCal format. The site rebuilds each morning, updates the custom three-month calendar, and features events within the configured homepage window (60 days by default).
 
 ## Update the homepage map and impact figures

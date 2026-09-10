@@ -907,11 +907,24 @@ content:
           - name: sampleEventNotice
             label: Sample-event notice
             type: text
-            required: true
+            description: Optional. Leave blank when no additional sample-event notice is needed.
           - name: calendarFeedUrl
             label: Public iCal feed URL
             type: string
             description: Use only the public iCal address. Never paste a secret calendar address.
+          - name: calendarSubscribeUrl
+            label: Community calendar subscription URL
+            type: string
+          - name: memberCalendarUrl
+            label: Member Google Calendar URL
+            type: string
+          - name: memberCalendarSubscribeUrl
+            label: Member calendar subscription URL
+            type: string
+          - name: memberCalendarFeedUrl
+            label: Member public iCal feed URL
+            type: string
+            description: Use only the public iCal address of a calendar intended for the website. Never paste a secret address.
           - name: calendarWindowDays
             label: Homepage upcoming-event window in days
             type: number
