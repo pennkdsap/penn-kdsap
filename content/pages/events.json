@@ -8,44 +8,22 @@
   "heroImageAlt": "Penn KDSAP volunteers together at a screening station",
   "calendarEyebrow": "Public schedule",
   "calendarTitle": "Explore upcoming events",
-  "calendarIntroduction": "Browse public screenings, training sessions, and educational events. Dates marked as examples are demonstrations and are not confirmed chapter events.",
-  "calendarFeedUrl": "",
+  "calendarIntroduction": "Choose the community calendar for public screenings and outreach, or the member calendar for chapter meetings and training.",
+  "calendarFeedUrl": "https://calendar.google.com/calendar/ical/8fe5fd5bfefd6ba503bd3cf74ef091705b236dc86c6887a8348259bef0a54cc6%40group.calendar.google.com/public/basic.ics",
   "calendarWindowDays": 60,
   "calendarTimeZone": "America/New_York",
-  "sampleEventNotice": "Example events are demonstrations only and should be replaced with confirmed chapter dates before promotion.",
+  "sampleEventNotice": "",
   "emptyEyebrow": "Public calendar",
   "emptyTitle": "No public events are listed yet",
-  "emptyText": "The calendar is ready for the chapter’s public Google Calendar. Until it is connected, contact Penn KDSAP for upcoming screening information.",
-  "publicCalendarUrl": "",
+  "emptyText": "Confirmed screenings and outreach events will appear on the community calendar. Add it to Google Calendar to follow future updates.",
+  "publicCalendarUrl": "https://calendar.google.com/calendar/embed?src=8fe5fd5bfefd6ba503bd3cf74ef091705b236dc86c6887a8348259bef0a54cc6%40group.calendar.google.com&ctz=America%2FNew_York",
   "calendarActionLabel": "Open public calendar",
-  "upcomingEvents": [
-    {
-      "start": "2026-09-26T10:00:00-04:00",
-      "type": "Screening",
-      "title": "[SAMPLE] Community Kidney Health Screening",
-      "location": "West Philadelphia Community Center — example location",
-      "actionLabel": "View sample event",
-      "actionUrl": "https://www.google.com/calendar/event?eid=NDN1NHZkbWRmbGQ2bzM3MmcxaGs3YmM2aTggYWthc2hkdWIwNkBt"
-    },
-    {
-      "start": "2026-10-10T18:00:00-04:00",
-      "type": "Training",
-      "title": "[SAMPLE] Volunteer Screening Training",
-      "location": "University of Pennsylvania — example room",
-      "actionLabel": "View sample event",
-      "actionUrl": "https://www.google.com/calendar/event?eid=amQwazVxaWwwM2Z0ZTJiZ2gxbzhibTluaHMgYWthc2hkdWIwNkBt"
-    },
-    {
-      "start": "2026-11-07T11:00:00-05:00",
-      "type": "Education",
-      "title": "[SAMPLE] Kidney Health Education Workshop",
-      "location": "University City Library — example location",
-      "actionLabel": "View sample event",
-      "actionUrl": "https://www.google.com/calendar/event?eid=NnQ4OTVibzRnZmtkMGNmYzEzY2d2MTFxazggYWthc2hkdWIwNkBt"
-    }
-  ],
+  "upcomingEvents": [],
   "memberTitle": "Penn member events",
-  "memberText": "Internal meetings, volunteer assignments, and private access details belong on the separately shared member calendar and are not published on this website.",
+  "memberText": "Chapter meetings, training, and activities for Penn KDSAP members. This calendar is publicly viewable; attendance is for members.",
   "contactActionLabel": "Ask about upcoming events",
-  "contactActionUrl": "../contact-us/"
+  "contactActionUrl": "../contact-us/",
+  "calendarSubscribeUrl": "https://calendar.google.com/calendar/r?cid=8fe5fd5bfefd6ba503bd3cf74ef091705b236dc86c6887a8348259bef0a54cc6%40group.calendar.google.com",
+  "memberCalendarUrl": "https://calendar.google.com/calendar/embed?src=7b6bbf92dbb7101e627526204efe99005ac6efec96cba169fc68f75f36dbc47f%40group.calendar.google.com&ctz=America%2FNew_York",
+  "memberCalendarSubscribeUrl": "https://calendar.google.com/calendar/r?cid=7b6bbf92dbb7101e627526204efe99005ac6efec96cba169fc68f75f36dbc47f%40group.calendar.google.com"
 }
