@@ -5,6 +5,23 @@
   const button = document.querySelector('.menu-button');
   const navigation = document.querySelector('.site-navigation');
   const header = document.querySelector('[data-header]');
+  const themeButton = document.querySelector('[data-theme-toggle]');
+  const colorScheme = window.matchMedia('(prefers-color-scheme: dark)');
+  const applyTheme = (theme, persist = false) => {
+    document.documentElement.dataset.theme = theme;
+    if (persist) try { localStorage.setItem('penn-kdsap-theme', theme); } catch { /* Storage may be unavailable. */ }
+    if (!themeButton) return;
+    const dark = theme === 'dark';
+    themeButton.setAttribute('aria-pressed', String(dark));
+    const label = themeButton.querySelector('[data-theme-label]');
+    if (label) label.textContent = dark ? themeButton.dataset.lightLabel : themeButton.dataset.darkLabel;
+  };
+  applyTheme(document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light');
+  themeButton?.addEventListener('click', () => applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark', true));
+  colorScheme.addEventListener?.('change', (event) => {
+    try { if (localStorage.getItem('penn-kdsap-theme')) return; } catch { return; }
+    applyTheme(event.matches ? 'dark' : 'light');
+  });
 
   const updateScrollEffects = () => {
     header?.classList.toggle('is-scrolled', window.scrollY > 24);

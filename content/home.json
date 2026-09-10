@@ -135,6 +135,8 @@
       { "label": "Events", "url": "calendar/" },
       { "label": "For students", "url": "kdsap/" }
     ],
+    "darkModeLabel": "Dark mode",
+    "lightModeLabel": "Light mode",
     "copyright": "Penn KDSAP",
     "affiliation": "University of Pennsylvania"
   }

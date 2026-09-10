@@ -502,6 +502,14 @@ content:
                     label: Link path
                     type: string
                     required: true
+              - name: darkModeLabel
+                label: Dark mode button text
+                type: string
+                required: true
+              - name: lightModeLabel
+                label: Light mode button text
+                type: string
+                required: true
               - name: copyright
                 label: Copyright name
                 type: string
@@ -593,6 +601,132 @@ content:
                 label: Show on website
                 type: boolean
                 default: true
+      - name: screenings
+        label: Screening journey
+        type: file
+        path: content/pages/screenings.json
+        format: json
+        operations:
+          delete: false
+        fields:
+          - name: pageTitle
+            label: Browser and share title
+            type: string
+            required: true
+          - name: metaDescription
+            label: Search description
+            type: text
+            required: true
+          - name: eyebrow
+            label: Hero small heading
+            type: string
+            required: true
+          - name: title
+            label: Hero heading
+            type: string
+            required: true
+          - name: summary
+            label: Hero supporting text
+            type: text
+            required: true
+          - name: heroImage
+            label: Hero image
+            type: image
+            required: true
+          - name: heroImageAlt
+            label: Hero image description
+            type: string
+            required: true
+          - name: journeyEyebrow
+            label: Journey small heading
+            type: string
+            required: true
+          - name: journeyTitle
+            label: Journey heading
+            type: string
+            required: true
+          - name: journeyIntroduction
+            label: Journey introduction
+            type: text
+            required: true
+          - name: journeyGraphicTitle
+            label: Graphic accessible title
+            type: string
+            required: true
+          - name: journeyGraphicDescription
+            label: Graphic accessible description
+            type: text
+            required: true
+          - name: journeySteps
+            label: Screening journey steps
+            type: object
+            description: Add, reorder, or edit the stations shown in the animated journey and detail cards.
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{number} — {title}"
+            fields:
+              - name: number
+                label: Display number
+                type: string
+                required: true
+              - name: title
+                label: Step heading
+                type: string
+                required: true
+              - name: text
+                label: Step description
+                type: text
+                required: true
+              - name: icon
+                label: Icon name
+                type: string
+                description: Use clipboard, history, pressure, scale, urine, glucose, education, or doctor.
+                required: true
+          - name: journeyDisclaimer
+            label: Journey medical note
+            type: text
+            required: true
+          - name: sectionEyebrow
+            label: Experience small heading
+            type: string
+            required: true
+          - name: sectionTitle
+            label: Experience heading
+            type: string
+            required: true
+          - name: sectionText
+            label: Experience introduction
+            type: text
+            required: true
+          - name: steps
+            label: Experience cards
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{number} — {title}"
+            fields:
+              - name: number
+                label: Display number
+                type: string
+                required: true
+              - name: title
+                label: Heading
+                type: string
+                required: true
+              - name: text
+                label: Text
+                type: text
+                required: true
+          - name: actionLabel
+            label: Request button text
+            type: string
+            required: true
+          - name: actionUrl
+            label: Request button path
+            type: string
+            required: true
       - name: events
         label: Events and calendar
         type: file
@@ -629,6 +763,35 @@ content:
             label: Hero image description
             type: string
             required: true
+          - name: calendarEyebrow
+            label: Calendar small heading
+            type: string
+            required: true
+          - name: calendarTitle
+            label: Calendar heading
+            type: string
+            required: true
+          - name: calendarIntroduction
+            label: Calendar introduction
+            type: text
+            required: true
+          - name: sampleEventNotice
+            label: Sample-event notice
+            type: text
+            required: true
+          - name: calendarFeedUrl
+            label: Public iCal feed URL
+            type: string
+            description: Use only the public iCal address. Never paste a secret calendar address.
+          - name: calendarWindowDays
+            label: Homepage upcoming-event window in days
+            type: number
+            required: true
+          - name: calendarTimeZone
+            label: Calendar time zone
+            type: string
+            description: Use an IANA time zone such as America/New_York.
+            required: true
           - name: publicCalendarUrl
             label: Public Google Calendar URL
             type: string
@@ -644,15 +807,13 @@ content:
             list:
               collapsible:
                 collapsed: true
-                summary: "{month} {day} — {title}"
+                summary: "{start} — {title}"
             fields:
-              - name: month
-                label: Month abbreviation
-                type: string
-                required: true
-              - name: day
-                label: Day
-                type: string
+              - name: start
+                label: Start date and time
+                type: date
+                options:
+                  time: true
                 required: true
               - name: type
                 label: Event type
@@ -704,7 +865,7 @@ content:
         label: Other website pages
         type: collection
         path: content/pages
-        exclude: [team.json, events.json]
+        exclude: [team.json, events.json, screenings.json]
         format: json
         operations:
           create: false

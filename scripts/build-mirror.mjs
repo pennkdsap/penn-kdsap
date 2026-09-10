@@ -27,6 +27,114 @@ const nativeContent = Object.fromEntries(await Promise.all(Object.values(nativeF
   name,
   JSON.parse(await readFile(join(root, 'content/pages', `${name}.json`), 'utf8')),
 ])));
+const unescapeIcsText = (value = '') => value
+  .replaceAll('\\n', ' ')
+  .replaceAll('\\N', ' ')
+  .replaceAll('\\,', ',')
+  .replaceAll('\\;', ';')
+  .replaceAll('\\\\', '\\');
+const inferEventType = (title, categories = '') => {
+  const value = `${categories} ${title}`.toLowerCase();
+  if (value.includes('screen')) return 'Screening';
+  if (value.includes('train')) return 'Training';
+  if (value.includes('workshop') || value.includes('education')) return 'Education';
+  return 'Public event';
+};
+const parseIcsDate = (value = '') => {
+  const match = value.match(/^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})?(Z)?)?$/);
+  if (!match) return null;
+  const [, year, month, day, hour = '12', minute = '00', second = '00', utc] = match;
+  const allDay = !value.includes('T');
+  const timestamp = utc
+    ? Date.UTC(+year, +month - 1, +day, +hour, +minute, +second)
+    : Date.UTC(+year, +month - 1, +day, +hour, +minute, +second);
+  return {
+    date: new Date(timestamp),
+    dateKey: `${year}-${month}-${day}`,
+    allDay,
+    timeLabel: allDay ? '' : new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'UTC' }).format(new Date(timestamp)),
+  };
+};
+const parseCalendarFeed = (source) => {
+  const unfolded = source.replace(/\r?\n[ \t]/g, '');
+  return [...unfolded.matchAll(/BEGIN:VEVENT\r?\n([\s\S]*?)\r?\nEND:VEVENT/g)].map((match) => {
+    const properties = {};
+    for (const line of match[1].split(/\r?\n/)) {
+      const separator = line.indexOf(':');
+      if (separator < 0) continue;
+      const key = line.slice(0, separator).split(';')[0];
+      if (!(key in properties)) properties[key] = line.slice(separator + 1);
+    }
+    const start = parseIcsDate(properties.DTSTART);
+    if (!start || properties.STATUS === 'CANCELLED') return null;
+    const title = unescapeIcsText(properties.SUMMARY || 'Public event');
+    return {
+      ...start,
+      title,
+      type: inferEventType(title, properties.CATEGORIES),
+      location: unescapeIcsText(properties.LOCATION || 'Location to be announced'),
+      actionLabel: 'Open public calendar',
+      actionUrl: nativeContent.events.publicCalendarUrl,
+    };
+  }).filter(Boolean).sort((a, b) => a.date - b.date);
+};
+const loadPublicCalendarEvents = async () => {
+  const { calendarFeedUrl, upcomingEvents = [] } = nativeContent.events;
+  if (calendarFeedUrl) {
+    try {
+      const response = await fetch(calendarFeedUrl, { headers: { 'user-agent': 'Penn-KDSAP-site-builder/1.0' } });
+      if (!response.ok) throw new Error(`Calendar feed returned ${response.status}`);
+      const events = parseCalendarFeed(await response.text());
+      if (events.length) return events;
+    } catch (error) {
+      console.warn(`Calendar feed unavailable; using CMS fallback events. ${error.message}`);
+    }
+  }
+  return upcomingEvents.map((item) => {
+    const source = String(item.start || '');
+    const allDay = /^\d{4}-\d{2}-\d{2}$/.test(source);
+    const date = new Date(allDay ? `${source}T12:00:00Z` : source);
+    if (Number.isNaN(date.getTime())) return null;
+    return {
+      ...item,
+      date,
+      dateKey: source.slice(0, 10),
+      allDay,
+      timeLabel: allDay ? '' : new Intl.DateTimeFormat('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        timeZone: nativeContent.events.calendarTimeZone || 'America/New_York',
+      }).format(date),
+    };
+  }).filter(Boolean).sort((a, b) => a.date - b.date);
+};
+const publicCalendarEvents = await loadPublicCalendarEvents();
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+const eventWindowEnd = new Date(today);
+eventWindowEnd.setDate(eventWindowEnd.getDate() + Number(nativeContent.events.calendarWindowDays || 60));
+const featuredCalendarEvents = publicCalendarEvents.filter((event) => event.date >= today && event.date <= eventWindowEnd);
+const eventMonthFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', timeZone: 'UTC' });
+const eventLongMonthFormatter = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+const renderEventCard = (item, className = 'quick-event') => `<article class="${className}"><time datetime="${escapeHtml(item.dateKey)}"><span>${escapeHtml(eventMonthFormatter.format(item.date))}</span><strong>${escapeHtml(item.date.getUTCDate())}</strong></time><div><p>${escapeHtml(item.type)}</p><h3>${escapeHtml(item.title)}</h3><span>${escapeHtml(`${item.timeLabel ? `${item.timeLabel} · ` : ''}${item.location}`)}</span>${item.actionUrl ? `<a class="text-link" href="${escapeHtml(item.actionUrl)}">${escapeHtml(item.actionLabel)}</a>` : ''}</div></article>`;
+const addMonths = (date, amount) => new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth() + amount, 1));
+const calendarStartMonth = new Date(Date.UTC(today.getFullYear(), today.getMonth(), 1));
+const calendarMonths = Array.from({ length: 3 }, (_, index) => addMonths(calendarStartMonth, index));
+const calendarRangeEnd = addMonths(calendarStartMonth, 3);
+const calendarAgendaEvents = publicCalendarEvents.filter((event) => event.date >= today && event.date < calendarRangeEnd);
+const renderCalendarMonth = (monthDate) => {
+  const year = monthDate.getUTCFullYear();
+  const month = monthDate.getUTCMonth();
+  const dayCount = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+  const leadingDays = monthDate.getUTCDay();
+  const cells = Array.from({ length: leadingDays }, () => '<span class="calendar-day is-blank" aria-hidden="true"></span>');
+  for (let day = 1; day <= dayCount; day += 1) {
+    const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const events = publicCalendarEvents.filter((event) => event.dateKey === dateKey);
+    cells.push(`<div class="calendar-day${events.length ? ' has-events' : ''}"><time datetime="${dateKey}">${day}</time>${events.map((event) => `<span class="calendar-event-marker" aria-label="${escapeHtml(event.title)}" title="${escapeHtml(event.title)}"></span>`).join('')}</div>`);
+  }
+  return `<section class="calendar-month" aria-label="${escapeHtml(eventLongMonthFormatter.format(monthDate))}"><h3>${escapeHtml(eventLongMonthFormatter.format(monthDate))}</h3><div class="calendar-weekdays" aria-hidden="true"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div><div class="calendar-days">${cells.join('')}</div></section>`;
+};
 const redirects = {
   'about-1.html': 'health-education',
   'about-3.html': 'news',
@@ -71,8 +179,8 @@ const impactItems = homeContent.impact.items.map((item) => `
 const coordinate = (value) => Number.isFinite(Number(value)) ? Number(value) : 0;
 const mapPins = homeContent.communityMap.pins.map((pin, index) => `<span data-map-pin="${index}" data-latitude="${coordinate(pin.latitude)}" data-longitude="${coordinate(pin.longitude)}" data-name="${escapeHtml(pin.name)}" data-address="${escapeHtml(pin.address)}" data-date="${escapeHtml(pin.date)}" data-label="${escapeHtml(`${homeContent.communityMap.pinLabel}: ${pin.name}`)}"></span>`).join('');
 const mapSiteItems = homeContent.communityMap.pins.map((pin, index) => `<li data-map-site="${index}"><button type="button" data-map-site-button="${index}"><span>${index + 1}</span><span><strong>${escapeHtml(pin.name)}</strong><small>${escapeHtml(pin.address)}</small><small>${escapeHtml(pin.date)}</small></span></button></li>`).join('');
-const eventItems = nativeContent.events.upcomingEvents.length
-  ? nativeContent.events.upcomingEvents.slice(0, 3).map((item) => `<article class="quick-event"><time><span>${escapeHtml(item.month)}</span><strong>${escapeHtml(item.day)}</strong></time><div><p>${escapeHtml(item.type)}</p><h3>${escapeHtml(item.title)}</h3><span>${escapeHtml(item.location)}</span>${item.actionUrl ? `<a href="${escapeHtml(item.actionUrl)}">${escapeHtml(item.actionLabel)}</a>` : ''}</div></article>`).join('')
+const eventItems = featuredCalendarEvents.length
+  ? featuredCalendarEvents.slice(0, 3).map((item) => renderEventCard(item)).join('')
   : `<div class="events-empty"><span aria-hidden="true">—</span><h3>${escapeHtml(homeContent.quickEvents.emptyTitle)}</h3><p>${escapeHtml(homeContent.quickEvents.emptyText)}</p></div>`;
 const storyItems = homeContent.stories.items.map((item, index) => `
             <figure class="story${index === 0 ? ' story-large' : ''}">
@@ -86,6 +194,27 @@ const renderInfoCards = (items, className = 'info-card') => items.map((item, ind
             <p>${escapeHtml(item.text)}</p>
             ${item.actionLabel ? `<a class="text-link" href="${escapeHtml(item.actionUrl)}">${escapeHtml(item.actionLabel)} <span aria-hidden="true">→</span></a>` : ''}
           </article>`).join('');
+const journeyIcons = {
+  clipboard: '<rect x="8" y="7" width="20" height="25" rx="3"/><path d="M13 7V4h10v3M13 15h10M13 21h10M13 27h7"/>',
+  history: '<circle cx="18" cy="18" r="13"/><path d="M18 10v9l6 4M8 7l-2 7 7-1"/>',
+  pressure: '<path d="M7 11h15a5 5 0 0 1 5 5v7a5 5 0 0 1-5 5H7zM27 18h4v11M12 16v7M17 14v9"/>',
+  scale: '<path d="M7 30h22L27 9H9z"/><path d="M13 15a6 6 0 0 1 10 0M18 15l3-4"/>',
+  urine: '<path d="M12 5h12v5l3 5v14a3 3 0 0 1-3 3H12a3 3 0 0 1-3-3V15l3-5zM9 20h18"/>',
+  glucose: '<path d="M18 4c5 7 10 12 10 19a10 10 0 0 1-20 0c0-7 5-12 10-19z"/><path d="M13 24a5 5 0 0 0 5 4"/>',
+  education: '<path d="M5 8h11a5 5 0 0 1 5 5v18a6 6 0 0 0-6-6H5zM31 8H20M31 8v17H21M10 14h6M10 19h6"/>',
+  doctor: '<circle cx="18" cy="11" r="6"/><path d="M7 32c1-8 5-12 11-12s10 4 11 12M11 23v5h14v-5"/>',
+};
+const renderJourneySvg = (data, mobile = false) => {
+  const desktopPositions = [[90, 110], [360, 110], [630, 110], [900, 110], [1110, 330], [840, 330], [570, 330], [300, 330]];
+  const positions = mobile ? data.journeySteps.map((_, index) => [70, 70 + (index * 126)]) : desktopPositions;
+  const route = mobile ? 'M70 70V952' : 'M90 110H900C1010 110 1110 205 1110 330H300';
+  const mode = mobile ? 'mobile' : 'desktop';
+  const nodes = data.journeySteps.map((step, index) => {
+    const [x, y] = positions[index] || positions[positions.length - 1];
+    return `<g class="journey-node" style="--journey-delay:${index * 0.16}s" transform="translate(${x} ${y})"><circle class="journey-node-halo" r="42"/><circle class="journey-node-disc" r="32"/><g class="journey-icon" transform="translate(-18 -18)">${journeyIcons[step.icon] || journeyIcons.clipboard}</g><text x="0" y="58" text-anchor="middle">${escapeHtml(step.number)}</text></g>`;
+  }).join('');
+  return `<svg class="journey-graphic journey-graphic-${mode}" viewBox="0 0 ${mobile ? '420 1020' : '1200 440'}" role="img" aria-labelledby="journey-${mode}-title journey-${mode}-description"><title id="journey-${mode}-title">${escapeHtml(data.journeyGraphicTitle)}</title><desc id="journey-${mode}-description">${escapeHtml(data.journeyGraphicDescription)}</desc><path class="journey-route-shadow" d="${route}"/><path class="journey-route" d="${route}"/>${nodes}<g class="journey-kidneys" transform="translate(${mobile ? '255 475' : '1050 200'})"><path class="journey-kidney" transform="translate(-34 -3) rotate(-8)" d="M0-45C-24-47-40-28-40-2c0 28 17 46 37 42 15-3 19-18 11-29C1 2 2-6 10-17c8-12 1-25-10-28Z"/><path class="journey-kidney" transform="translate(34 3) rotate(8)" d="M0-45C24-47 40-28 40-2c0 28-17 46-37 42-15-3-19-18-11-29 7-9 6-17-2-28-8-12-1-25 10-28Z"/><path class="journey-ureter" d="M-25 9C-24 34-15 54-5 68M25 12C24 36 15 55 5 68"/><path class="journey-bladder" d="M-12 66C-8 62 8 62 12 66v8C12 84 5 90 0 90s-12-6-12-16Z"/><path class="journey-ureter" d="M0 90v9"/></g></svg>`;
+};
 const renderNativeBody = (name, data) => {
   if (name === 'about') return data.sections.map((section, index) => `
       <section class="interior-section${index % 2 ? ' section-tint' : ''}" data-reveal>
@@ -96,7 +225,20 @@ const renderNativeBody = (name, data) => {
         </div>
       </section>`).join('');
   if (name === 'screenings') return `
-      <section class="interior-section" data-reveal>
+      <section class="interior-section screening-journey" data-reveal>
+        <div class="shell">
+          <div class="section-heading journey-heading"><p class="eyebrow eyebrow-dark">${escapeHtml(data.journeyEyebrow)}</p><h2>${escapeHtml(data.journeyTitle)}</h2><p>${escapeHtml(data.journeyIntroduction)}</p></div>
+          <div class="journey-visual" aria-hidden="false">
+            ${renderJourneySvg(data)}
+            ${renderJourneySvg(data, true)}
+          </div>
+          <div class="journey-detail-grid">
+            ${data.journeySteps.map((step) => `<article class="journey-detail"><span>${escapeHtml(step.number)}</span><h3>${escapeHtml(step.title)}</h3><p>${escapeHtml(step.text)}</p></article>`).join('')}
+          </div>
+          <p class="medical-note journey-disclaimer">${escapeHtml(data.journeyDisclaimer)}</p>
+        </div>
+      </section>
+      <section class="interior-section section-tint" data-reveal>
         <div class="shell">
           <div class="section-heading"><p class="eyebrow eyebrow-dark">${escapeHtml(data.sectionEyebrow)}</p><h2>${escapeHtml(data.sectionTitle)}</h2><p>${escapeHtml(data.sectionText)}</p></div>
           <div class="info-grid four-up">${renderInfoCards(data.steps, 'info-card step-card')}</div>
@@ -111,10 +253,11 @@ const renderNativeBody = (name, data) => {
         </div>
       </section>`;
   if (name === 'events') {
-    const agenda = data.upcomingEvents.length
-      ? `<div class="events-agenda">${data.upcomingEvents.map((item) => `<article><time><span>${escapeHtml(item.month)}</span><strong>${escapeHtml(item.day)}</strong></time><div><p>${escapeHtml(item.type)}</p><h3>${escapeHtml(item.title)}</h3><span>${escapeHtml(item.location)}</span>${item.actionUrl ? `<a class="text-link" href="${escapeHtml(item.actionUrl)}">${escapeHtml(item.actionLabel)}</a>` : ''}</div></article>`).join('')}</div>`
+    const agenda = calendarAgendaEvents.length
+      ? `<div class="events-agenda">${calendarAgendaEvents.map((item) => renderEventCard(item, 'calendar-agenda-event')).join('')}</div>`
       : `<div class="event-empty"><p class="eyebrow eyebrow-dark">${escapeHtml(data.emptyEyebrow)}</p><h2>${escapeHtml(data.emptyTitle)}</h2><p>${escapeHtml(data.emptyText)}</p>${data.publicCalendarUrl ? `<a class="button button-dark" href="${escapeHtml(data.publicCalendarUrl)}">${escapeHtml(data.calendarActionLabel)}</a>` : `<a class="button button-dark" href="${escapeHtml(data.contactActionUrl)}">${escapeHtml(data.contactActionLabel)}</a>`}</div>`;
-    return `<section class="interior-section" data-reveal><div class="shell events-layout">${agenda}<aside class="privacy-panel"><h2>${escapeHtml(data.memberTitle)}</h2><p>${escapeHtml(data.memberText)}</p></aside></div></section>`;
+    const months = calendarMonths.map(renderCalendarMonth).join('');
+    return `<section class="interior-section calendar-section" data-reveal><div class="shell"><div class="section-heading"><p class="eyebrow eyebrow-dark">${escapeHtml(data.calendarEyebrow)}</p><h2>${escapeHtml(data.calendarTitle)}</h2><p>${escapeHtml(data.calendarIntroduction)}</p></div><p class="sample-event-notice">${escapeHtml(data.sampleEventNotice)}</p><div class="calendar-months">${months}</div><div class="events-layout calendar-agenda-layout">${agenda}<aside class="privacy-panel"><h2>${escapeHtml(data.memberTitle)}</h2><p>${escapeHtml(data.memberText)}</p>${data.publicCalendarUrl ? `<a class="text-link text-link-light" href="${escapeHtml(data.publicCalendarUrl)}">${escapeHtml(data.calendarActionLabel)}</a>` : ''}</aside></div></div></section>`;
   }
   if (name === 'resources') return `
       <section class="interior-section" data-reveal><div class="shell"><div class="section-heading"><p class="eyebrow eyebrow-dark">${escapeHtml(data.sectionEyebrow)}</p><h2>${escapeHtml(data.sectionTitle)}</h2><p>${escapeHtml(data.sectionText)}</p></div><div class="info-grid">${renderInfoCards(data.initiatives)}</div><p class="medical-note">${escapeHtml(data.disclaimer)}</p></div></section>`;
@@ -168,6 +311,8 @@ const renderNativePage = (name, data) => nativeTemplate
   .replaceAll('{{FOOTER_EXPLORE_LINKS}}', renderPrefixedLinks(homeContent.footer.exploreLinks))
   .replaceAll('{{FOOTER_CONNECT_HEADING}}', escapeHtml(homeContent.footer.connectHeading))
   .replaceAll('{{FOOTER_CONNECT_LINKS}}', renderPrefixedLinks(homeContent.footer.connectLinks))
+  .replaceAll('{{FOOTER_DARK_MODE_LABEL}}', escapeHtml(homeContent.footer.darkModeLabel))
+  .replaceAll('{{FOOTER_LIGHT_MODE_LABEL}}', escapeHtml(homeContent.footer.lightModeLabel))
   .replaceAll('{{FOOTER_COPYRIGHT}}', escapeHtml(homeContent.footer.copyright))
   .replaceAll('{{FOOTER_AFFILIATION}}', escapeHtml(homeContent.footer.affiliation))
   .replaceAll('{{CURRENT_YEAR}}', String(new Date().getFullYear()));
@@ -271,6 +416,8 @@ for (const page of pages) {
       .replaceAll('{{FOOTER_EXPLORE_LINKS}}', renderLinks(homeContent.footer.exploreLinks))
       .replaceAll('{{FOOTER_CONNECT_HEADING}}', escapeHtml(homeContent.footer.connectHeading))
       .replaceAll('{{FOOTER_CONNECT_LINKS}}', renderLinks(homeContent.footer.connectLinks))
+      .replaceAll('{{FOOTER_DARK_MODE_LABEL}}', escapeHtml(homeContent.footer.darkModeLabel))
+      .replaceAll('{{FOOTER_LIGHT_MODE_LABEL}}', escapeHtml(homeContent.footer.lightModeLabel))
       .replaceAll('{{FOOTER_COPYRIGHT}}', escapeHtml(homeContent.footer.copyright))
       .replaceAll('{{FOOTER_AFFILIATION}}', escapeHtml(homeContent.footer.affiliation))
       .replaceAll('{{CURRENT_YEAR}}', String(new Date().getFullYear()))

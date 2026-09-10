@@ -16,6 +16,7 @@
     <title>{{PAGE_TITLE}}</title>
     <link rel="icon" href="favicon.png" type="image/png">
     <link rel="preload" as="image" href="{{HERO_IMAGE}}" type="image/webp" fetchpriority="high">
+    <script>try{const t=localStorage.getItem('penn-kdsap-theme');document.documentElement.dataset.theme=t==='dark'||t==='light'?t:matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}catch{document.documentElement.dataset.theme='light'}</script>
     <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
     <link rel="stylesheet" href="css/site.css">
   </head>
@@ -183,6 +184,7 @@
       <div class="shell footer-bottom">
         <p>© {{CURRENT_YEAR}} {{FOOTER_COPYRIGHT}}</p>
         <p>{{FOOTER_AFFILIATION}}</p>
+        <button class="theme-toggle" type="button" data-theme-toggle data-dark-label="{{FOOTER_DARK_MODE_LABEL}}" data-light-label="{{FOOTER_LIGHT_MODE_LABEL}}" aria-pressed="false"><span class="theme-toggle-icon" aria-hidden="true"></span><span data-theme-label>{{FOOTER_DARK_MODE_LABEL}}</span></button>
       </div>
     </footer>
     <script src="vendor/leaflet/leaflet.js"></script>

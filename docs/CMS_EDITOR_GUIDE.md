@@ -26,7 +26,7 @@ Use a vertical portrait when possible. The site displays portraits at a 2:3 rati
 
 The full list appears on the Events page. The first three items automatically appear in the homepage quick calendar.
 
-To link a Google Calendar, make a separate public-facing calendar, copy its public share URL, and paste it into **Public Google Calendar URL**. Do not publish private meetings, volunteer assignments, attendee details, or private video-call links.
+To link a Google Calendar, make a separate public-facing calendar and paste its **Public URL to this calendar** into **Public Google Calendar URL**. Paste its **Public address in iCal format** into **Public iCal feed URL**. Never paste the Secret address in iCal format. The site rebuilds each morning, updates the custom three-month calendar, and features events within the configured homepage window (60 days by default).
 
 ## Update the homepage map and impact figures
 
