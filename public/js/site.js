@@ -23,52 +23,38 @@
     applyTheme(event.matches ? 'dark' : 'light');
   });
 
-  const slideshow = document.querySelector('[data-hero-slideshow]');
-  const slides = [...document.querySelectorAll('[data-hero-slide]')];
-  const slideDots = [...document.querySelectorAll('[data-hero-dot]')];
-  const slideshowToggle = document.querySelector('[data-hero-toggle]');
-  if (slideshow && slides.length > 1 && slideshowToggle) {
-    let activeSlide = 0;
-    let timer;
-    let paused = reduceMotion.matches;
-    const interval = Math.max(3000, Number(slideshow.dataset.interval) || 6500);
-    const showSlide = (index) => {
-      activeSlide = (index + slides.length) % slides.length;
-      slides.forEach((slide, slideIndex) => {
-        const active = slideIndex === activeSlide;
-        slide.classList.toggle('is-active', active);
-        slide.setAttribute('aria-hidden', String(!active));
-      });
-      slideDots.forEach((dot, dotIndex) => {
-        const active = dotIndex === activeSlide;
-        dot.classList.toggle('is-active', active);
-        dot.setAttribute('aria-current', String(active));
-      });
-    };
-    const stopRotation = () => window.clearInterval(timer);
-    const startRotation = () => {
-      stopRotation();
-      if (!paused && !document.hidden) timer = window.setInterval(() => showSlide(activeSlide + 1), interval);
-    };
-    const updateToggle = () => {
-      slideshowToggle.classList.toggle('is-paused', paused);
-      slideshowToggle.setAttribute('aria-label', paused ? slideshowToggle.dataset.playLabel : slideshowToggle.dataset.pauseLabel);
-    };
-    slideDots.forEach((dot, index) => dot.addEventListener('click', () => {
-      showSlide(index);
-      startRotation();
-    }));
-    slideshowToggle.addEventListener('click', () => {
-      paused = !paused;
-      updateToggle();
-      startRotation();
+  const journey = document.querySelector('[data-journey]');
+  const steps = [...document.querySelectorAll('[data-journey-step]')];
+  const journeyLinks = [...document.querySelectorAll('[data-journey-link]')];
+  let scrollPending = false;
+  const updateJourney = () => {
+    if (!journey || !steps.length) return;
+    const focusLine = Math.min(window.innerHeight * .45, 360);
+    let active = 0;
+    steps.forEach((step, index) => {
+      if (step.getBoundingClientRect().top <= focusLine) active = index;
     });
-    document.addEventListener('visibilitychange', startRotation);
-    updateToggle();
-    startRotation();
-  } else {
-    slideshowToggle?.remove();
-  }
+    steps.forEach((step, index) => {
+      step.classList.toggle('is-current', index === active);
+      step.classList.toggle('is-passed', index < active);
+    });
+    journeyLinks.forEach((link, index) => {
+      if (index === active) link.setAttribute('aria-current', 'step');
+      else link.removeAttribute('aria-current');
+    });
+    journey.querySelector('[data-journey-current]').textContent = String(active + 1).padStart(2, '0');
+    const first = steps[0].getBoundingClientRect().top;
+    const last = steps[steps.length - 1].getBoundingClientRect().top;
+    journey.style.setProperty('--journey-progress', String(Math.max(0, Math.min(1, (focusLine - first) / Math.max(1, last - first)))));
+  };
+  updateJourney();
+  const scheduleJourney = () => {
+    if (scrollPending || !journey) return;
+    scrollPending = true;
+    requestAnimationFrame(() => { updateJourney(); scrollPending = false; });
+  };
+  window.addEventListener('scroll', scheduleJourney, { passive: true });
+  window.addEventListener('resize', scheduleJourney);
 
   const updateScrollEffects = () => {
     header?.classList.toggle('is-scrolled', window.scrollY > 24);
@@ -133,9 +119,13 @@
     const points = mapPins.map((pin) => [Number(pin.dataset.latitude), Number(pin.dataset.longitude)]);
     screeningMap = window.L.map(mapElement, { scrollWheelZoom: false }).fitBounds(points, { padding: [36, 36] });
     window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      attribution: '&copy; <a target="_blank" rel="noopener noreferrer" href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       maxZoom: 19,
     }).addTo(screeningMap);
+    mapElement.querySelectorAll('.leaflet-control-attribution a').forEach((link) => {
+      link.target = '_blank';
+      link.rel = 'noopener noreferrer';
+    });
     mapElement.querySelector('[data-map-fallback]')?.remove();
     mapPins.forEach((pin, index) => {
       const tooltip = document.createElement('div');

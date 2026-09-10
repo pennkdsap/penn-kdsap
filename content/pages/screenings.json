@@ -22,8 +22,8 @@
     { "number": "07", "title": "Health education", "text": "Review practical, plain-language kidney-health information and resources.", "icon": "education" },
     { "number": "08", "title": "Physician conversation", "text": "Discuss the screening information and appropriate next steps with an on-site physician.", "icon": "doctor" }
   ],
-  "sectionEyebrow": "What to expect",
-  "sectionTitle": "A welcoming, organized screening experience",
+  "sectionEyebrow": "Bring us to your community",
+  "sectionTitle": "A screening starts with a local partnership",
   "sectionText": "Each event is coordinated with the host organization. Available stations and services may vary by event, and visitors receive instructions from the screening team on site.",
   "steps": [
     { "number": "01", "title": "Welcome", "text": "Volunteers explain the event flow and help visitors begin the screening process." },

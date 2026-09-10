@@ -107,6 +107,7 @@ try {
       const response = await page.goto(`${localBase}${route}`, { waitUntil: 'load' });
       await page.waitForTimeout(750);
       const result = await page.evaluate(() => ({
+        externalLinkFailures: [...document.querySelectorAll('a[href]')].filter((a) => /^https?:/.test(a.href) && ![location.origin, 'https://akashdubey.me'].includes(new URL(a.href).origin) && (a.target !== '_blank' || !a.relList.contains('noopener'))).map((a) => a.href),
         width: document.documentElement.clientWidth,
         scrollWidth: document.documentElement.scrollWidth,
         height: document.body.scrollHeight,
@@ -118,6 +119,7 @@ try {
         brokenImages: [...document.images].filter((image) => image.complete && image.naturalWidth === 0).map((image) => image.getAttribute('src')),
         loginVisible: [...document.querySelectorAll('button')].some((element) => element.textContent?.includes('Log In') && element.getClientRects().length > 0),
       }));
+      if (result.externalLinkFailures.length) issues.push(`${route}: external links must open safely in a new tab (${result.externalLinkFailures.join(", ")})`);
       if (response?.status() !== 200 || result.height < 1) issues.push(`${viewport.name} ${route}: page did not render`);
       if (nativeFiles.has(file) && (result.h1Count !== 1 || result.unresolvedFields || result.brokenImages.length)) {
         issues.push(`${viewport.name} ${route}: native structure or assets failed (${result.brokenImages.join(', ')})`);
@@ -131,6 +133,58 @@ try {
     }
     await page.close();
   }
+  const interactions = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  for (const theme of ['light', 'dark']) {
+    await interactions.emulateMedia({ colorScheme: theme, reducedMotion: 'reduce' });
+    await interactions.goto(localBase);
+    if (await interactions.locator('[data-hero-toggle], [data-hero-dot]').count()) issues.push('home: unwanted hero controls remain');
+    if (await interactions.locator('[data-hero-slide]').count() !== 1) issues.push('home: hero should use one static image');
+    const contact = interactions.locator('.contact-band .button-light');
+    await contact.hover();
+    await interactions.waitForFunction(() => getComputedStyle(document.querySelector('.contact-band .button-light')).backgroundColor === 'rgb(231, 237, 244)');
+    const colors = await contact.evaluate((element) => {
+      const style = getComputedStyle(element);
+      return [style.color, style.backgroundColor];
+    });
+    if (colors[0] !== 'rgb(7, 31, 61)' || colors[1] !== 'rgb(231, 237, 244)') issues.push(`${theme}: contact hover colors are incorrect (${colors.join(", ")})`);
+    const toggle = interactions.locator('[data-theme-toggle]');
+    await toggle.focus();
+    await toggle.press('Enter');
+    if (await interactions.locator('html').getAttribute('data-theme') !== (theme === 'dark' ? 'light' : 'dark')) issues.push('theme: keyboard toggle failed');
+    await interactions.evaluate(() => localStorage.clear());
+  }
+  for (const width of [390, 768, 1024, 1440, 2560, 3840]) {
+    await interactions.setViewportSize({ width, height: 1000 });
+    await interactions.goto(localBase);
+    const layout = await interactions.evaluate(() => {
+      const textFits = (element) => {
+        const range = document.createRange();
+        range.selectNodeContents(element);
+        const text = range.getBoundingClientRect();
+        const box = element.getBoundingClientRect();
+        return text.left >= box.left - 1 && text.right <= box.right + 1;
+      };
+      const map = document.querySelector('.screening-map').getBoundingClientRect();
+      return {
+        statisticsFit: [...document.querySelectorAll('.impact-item strong')].every(textFits),
+        headingFits: textFits(document.querySelector('.quick-events h2')),
+        mapHasRoom: map.width >= 300 && map.height / map.width < 2,
+        pageFits: document.documentElement.scrollWidth <= document.documentElement.clientWidth,
+      };
+    });
+    if (Object.values(layout).some((value) => !value)) issues.push(`home at ${width}px: layout overflow (${JSON.stringify(layout)})`);
+  }
+  await interactions.setViewportSize({ width: 1440, height: 900 });
+  await interactions.emulateMedia({ reducedMotion: 'no-preference', colorScheme: 'dark' });
+  await interactions.goto(`${localBase}/kidney-screenings/`);
+  if (await interactions.locator('[data-journey-step]').count() !== 8) issues.push('screening: all eight stations must be present');
+  for (const index of [4, 7, 0]) {
+    await interactions.locator('[data-journey-link]').nth(index).click();
+    await interactions.waitForFunction((number) => document.querySelector('[data-journey-current]')?.textContent === number, String(index + 1).padStart(2, '0'));
+  }
+  await interactions.goto(`${localBase}/calendar/`);
+  if (await interactions.getByRole('link', { name: /Add .* to Google Calendar/ }).count() !== 2 || await interactions.locator('.live-calendar iframe').count() !== 2) issues.push('calendars: two live calendars and subscription links are required');
+  await interactions.close();
   await browser.close();
 } finally {
   server.close();
