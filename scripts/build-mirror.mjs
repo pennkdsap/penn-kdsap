@@ -8,7 +8,7 @@ const root = process.cwd();
 const sourceDirectory = join(root, 'site-html-archive/pages');
 const outputDirectory = join(root, 'dist');
 const deploymentBase = '/penn-kdsap';
-const publicSiteUrl = 'https://akashdubey.me';
+const publicSiteUrl = 'https://pennkdsap.github.io';
 const pages = (await readdir(sourceDirectory)).filter((file) => file.endsWith('.html'));
 const homeTemplate = await readFile(join(root, 'content/home-page.html'), 'utf8');
 const homeContent = JSON.parse(await readFile(join(root, 'content/home.json'), 'utf8'));

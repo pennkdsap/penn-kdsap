@@ -8,7 +8,7 @@ const root = process.cwd();
 const outputDirectory = join(root, 'dist');
 const sourceDirectory = join(root, 'site-html-archive/pages');
 const deploymentBase = '/penn-kdsap';
-const publicSiteUrl = 'https://akashdubey.me';
+const publicSiteUrl = 'https://pennkdsap.github.io';
 const pages = (await readdir(sourceDirectory)).filter((file) => file.endsWith('.html')).sort();
 const nativeFiles = new Set([
   'index.html', 'about.html', 'kidney-screenings.html', 'kdsap.html', 'calendar.html',
@@ -107,7 +107,7 @@ try {
       const response = await page.goto(`${localBase}${route}`, { waitUntil: 'load' });
       await page.waitForTimeout(750);
       const result = await page.evaluate(() => ({
-        externalLinkFailures: [...document.querySelectorAll('a[href]')].filter((a) => /^https?:/.test(a.href) && ![location.origin, 'https://akashdubey.me'].includes(new URL(a.href).origin) && (a.target !== '_blank' || !a.relList.contains('noopener'))).map((a) => a.href),
+        externalLinkFailures: [...document.querySelectorAll('a[href]')].filter((a) => /^https?:/.test(a.href) && ![location.origin, 'https://pennkdsap.github.io'].includes(new URL(a.href).origin) && (a.target !== '_blank' || !a.relList.contains('noopener'))).map((a) => a.href),
         width: document.documentElement.clientWidth,
         scrollWidth: document.documentElement.scrollWidth,
         height: document.body.scrollHeight,
@@ -143,12 +143,12 @@ try {
     await contact.scrollIntoViewIfNeeded();
     await contact.focus();
     await contact.hover();
-    await interactions.waitForFunction(() => getComputedStyle(document.querySelector('.contact-band .button-light')).backgroundColor === 'rgb(231, 237, 244)');
+    await interactions.waitForFunction(() => getComputedStyle(document.querySelector('.contact-band .button-light')).backgroundColor === 'rgb(255, 240, 226)');
     const colors = await contact.evaluate((element) => {
       const style = getComputedStyle(element);
       return [style.color, style.backgroundColor];
     });
-    if (colors[0] !== 'rgb(7, 31, 61)' || colors[1] !== 'rgb(231, 237, 244)') issues.push(`${theme}: contact hover colors are incorrect (${colors.join(", ")})`);
+    if (colors[0] !== 'rgb(124, 53, 20)' || colors[1] !== 'rgb(255, 240, 226)') issues.push(`${theme}: contact hover colors are incorrect (${colors.join(", ")})`);
     const toggle = interactions.locator('[data-theme-toggle]');
     await toggle.focus();
     await toggle.press('Enter');

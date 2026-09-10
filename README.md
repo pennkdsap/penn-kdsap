@@ -29,7 +29,7 @@ npm run screenshots -- --output site-screenshots --width 1280
 
 ## Editing content with Pages CMS
 
-All published page copy, homepage sections, impact figures, map locations, events, leadership members, links, and image descriptions are managed in `content/`. Editors can use [Pages CMS](https://app.pagescms.org/) instead of editing files: sign in with GitHub, install the Pages CMS GitHub App for the [Penn KDSAP repository](https://github.com/AkeBoss-tech/penn-kdsap), and select **Website pages**. Saving changes commits them to `main`, which automatically publishes the update through GitHub Pages.
+All published page copy, homepage sections, impact figures, map locations, events, leadership members, links, and image descriptions are managed in `content/`. Editors can use [Pages CMS](https://app.pagescms.org/) instead of editing files: sign in with GitHub, install the Pages CMS GitHub App for the [Penn KDSAP repository](https://github.com/pennkdsap/penn-kdsap), and select **Website pages**. Saving changes commits them to `main`, which automatically publishes the update through GitHub Pages.
 
 The CMS provides dedicated **Homepage**, **Leadership team**, and **Events and calendar** editors. All remaining native pages appear under **Other website pages**. Leadership members and events are reorderable cards; editors can add items, update titles and photos, or hide a saved leadership member without deleting their information.
 
