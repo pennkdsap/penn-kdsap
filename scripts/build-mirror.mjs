@@ -1,3 +1,4 @@
+import { renderCalendar, currentDateKey } from '../public/js/calendar-view.js';
 import { cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { siFacebook, siInstagram } from 'simple-icons';
@@ -70,7 +71,7 @@ const parseIcsDate = (value = '', sourceTimeZone = nativeContent.events.calendar
     timeLabel: allDay ? '' : new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone: displayZone }).format(date),
   };
 };
-const parseCalendarFeed = (source) => {
+const parseCalendarFeed = (source, calendarUrl) => {
   const unfolded = source.replace(/\r?\n[ \t]/g, '');
   return [...unfolded.matchAll(/BEGIN:VEVENT\r?\n([\s\S]*?)\r?\nEND:VEVENT/g)].map((match) => {
     const properties = {};
@@ -91,48 +92,45 @@ const parseCalendarFeed = (source) => {
       type: inferEventType(title, properties.CATEGORIES),
       location: unescapeIcsText(properties.LOCATION || 'Location to be announced'),
       actionLabel: 'Open public calendar',
-      actionUrl: nativeContent.events.publicCalendarUrl,
+      actionUrl: calendarUrl,
     };
   }).filter(Boolean).sort((a, b) => a.date - b.date);
 };
-const loadPublicCalendarEvents = async () => {
-  const { calendarFeedUrl, upcomingEvents = [] } = nativeContent.events;
+const loadCalendarEvents = async (calendarFeedUrl, calendarUrl, audience) => {
+  const upcomingEvents = [];
   if (calendarFeedUrl) {
     try {
       const response = await fetch(calendarFeedUrl, { signal: AbortSignal.timeout(15000), headers: { 'user-agent': 'Penn-KDSAP-site-builder/1.0' } });
       if (!response.ok) throw new Error(`Calendar feed returned ${response.status}`);
-      const events = parseCalendarFeed(await response.text());
-      return events;
+      const events = parseCalendarFeed(await response.text(), calendarUrl).map((event) => ({ ...event, audience, sample: /^\[SAMPLE\]/i.test(event.title) }));
+      return { events, unavailable: false };
     } catch (error) {
-      console.warn(`Calendar feed unavailable; using CMS fallback events. ${error.message}`);
+      console.warn(`Calendar feed unavailable; showing the last configured examples. ${error.message}`);
     }
   }
-  return upcomingEvents.map((item) => {
-    const source = String(item.start || '');
-    const allDay = /^\d{4}-\d{2}-\d{2}$/.test(source);
-    const date = new Date(allDay ? `${source}T12:00:00Z` : source);
-    if (Number.isNaN(date.getTime())) return null;
-    return {
-      ...item,
-      date,
-      dateKey: source.slice(0, 10),
-      allDay,
-      timeLabel: allDay ? '' : new Intl.DateTimeFormat('en-US', {
-        hour: 'numeric',
-        minute: '2-digit',
-        timeZone: nativeContent.events.calendarTimeZone || 'America/New_York',
-      }).format(date),
-    };
-  }).filter(Boolean).sort((a, b) => a.date - b.date);
+  return { events: upcomingEvents, unavailable: true };
 };
-const publicCalendarEvents = await loadPublicCalendarEvents();
-const today = new Date();
-today.setHours(0, 0, 0, 0);
-const eventWindowEnd = new Date(today);
-eventWindowEnd.setDate(eventWindowEnd.getDate() + Number(nativeContent.events.calendarWindowDays || 60));
-const featuredCalendarEvents = publicCalendarEvents.filter((event) => event.date >= today && event.date <= eventWindowEnd);
-const eventMonthFormatter = new Intl.DateTimeFormat('en-US', { month: 'short', timeZone: 'UTC' });
-const renderEventCard = (item, className = 'quick-event') => `<article class="${className}"><time datetime="${escapeHtml(item.dateKey)}"><span>${escapeHtml(eventMonthFormatter.format(new Date(`${item.dateKey}T12:00:00Z`)))}</span><strong>${escapeHtml(Number(item.dateKey.slice(-2)))}</strong></time><div><p>${escapeHtml(item.type)}</p><h3>${escapeHtml(item.title)}</h3><span>${escapeHtml(`${item.timeLabel ? `${item.timeLabel} · ` : ''}${item.location}`)}</span>${item.actionUrl ? `<a class="text-link" href="${escapeHtml(item.actionUrl)}">${escapeHtml(item.actionLabel)}</a>` : ''}</div></article>`;
+const [communityFeed, memberFeed] = await Promise.all([
+  loadCalendarEvents(nativeContent.events.calendarFeedUrl, nativeContent.events.publicCalendarUrl, 'Community'),
+  loadCalendarEvents(nativeContent.events.memberCalendarFeedUrl, nativeContent.events.memberCalendarUrl, 'Members'),
+]);
+const todayKey = currentDateKey();
+const sampleEvents = (nativeContent.events.sampleEvents || []).map((event) => ({
+  ...event, dateKey: event.start.slice(0, 10),
+  timeLabel: new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone: nativeContent.events.calendarTimeZone }).format(new Date(event.start)),
+  actionUrl: event.audience === 'Members' ? nativeContent.events.memberCalendarUrl : nativeContent.events.publicCalendarUrl,
+}));
+const eventsFor = (feed, audience) => {
+  const upcoming = feed.events.filter((event) => event.dateKey >= todayKey);
+  return (upcoming.length ? upcoming : sampleEvents.filter((event) => event.audience === audience && event.dateKey >= todayKey)).sort((a, b) => a.dateKey.localeCompare(b.dateKey) || a.start?.localeCompare(b.start || '') || 0);
+};
+const publicCalendarEvents = eventsFor(communityFeed, 'Community');
+const memberCalendarEvents = eventsFor(memberFeed, 'Members');
+const featuredCalendarEvents = [...publicCalendarEvents, ...memberCalendarEvents].sort((a, b) => a.dateKey.localeCompare(b.dateKey));
+const calendarNotice = (events, unavailable = false) => [
+  unavailable ? 'Calendar updates are temporarily unavailable. Open Google Calendar for the latest schedule.' : '',
+  events.some((event) => event.sample) ? 'Example schedule only. Sample events are fictional and are not confirmed chapter dates.' : '',
+].filter(Boolean).join(' ');
 const redirects = {
   'about-1.html': 'health-education',
   'about-3.html': 'news',
@@ -227,9 +225,7 @@ const impactItems = homeContent.impact.items.map((item) => `
 const coordinate = (value) => Number.isFinite(Number(value)) ? Number(value) : 0;
 const mapPins = homeContent.communityMap.pins.map((pin, index) => `<span data-map-pin="${index}" data-latitude="${coordinate(pin.latitude)}" data-longitude="${coordinate(pin.longitude)}" data-name="${escapeHtml(pin.name)}" data-address="${escapeHtml(pin.address)}" data-date="${escapeHtml(pin.date)}" data-label="${escapeHtml(`${homeContent.communityMap.pinLabel}: ${pin.name}`)}"></span>`).join('');
 const mapSiteItems = homeContent.communityMap.pins.map((pin, index) => `<li data-map-site="${index}"><button type="button" data-map-site-button="${index}"><span>${index + 1}</span><span><strong>${escapeHtml(pin.name)}</strong><small>${escapeHtml(pin.address)}</small><small>${escapeHtml(pin.date)}</small></span></button></li>`).join('');
-const eventItems = featuredCalendarEvents.length
-  ? featuredCalendarEvents.slice(0, 3).map((item) => renderEventCard(item)).join('')
-  : `<div class="events-empty"><span aria-hidden="true">—</span><h3>${escapeHtml(homeContent.quickEvents.emptyTitle)}</h3><p>${escapeHtml(homeContent.quickEvents.emptyText)}</p></div>`;
+const eventItems = renderCalendar({ id: 'home-calendar', title: 'Upcoming KDSAP events', events: featuredCalendarEvents, scope: 'upcoming', notice: calendarNotice(featuredCalendarEvents, communityFeed.unavailable || memberFeed.unavailable) });
 const storyItems = homeContent.stories.items.map((item, index) => `
             <figure class="story${index === 0 ? ' story-large' : ''}">
               <img src="${escapeHtml(assetPath(item.image))}" alt="${escapeHtml(item.imageAlt)}" width="1400" height="933" loading="lazy">
@@ -293,10 +289,10 @@ const renderNativeBody = (name, data) => {
       </section>`;
   if (name === 'events') {
     const calendars = [
-      { title: 'Community events', eyebrow: 'Open to the community', text: 'Free screenings, outreach, and kidney-health education. Follow the calendar for confirmed dates and locations.', url: data.publicCalendarUrl, subscribe: data.calendarSubscribeUrl },
-      { title: data.memberTitle, eyebrow: 'For Penn KDSAP members', text: data.memberText, url: data.memberCalendarUrl, subscribe: data.memberCalendarSubscribeUrl },
+      { id: 'community', title: 'Community events', text: 'Screenings, outreach, and kidney-health education.', url: data.publicCalendarUrl, subscribe: data.calendarSubscribeUrl, events: publicCalendarEvents, unavailable: communityFeed.unavailable },
+      { id: 'members', title: data.memberTitle, text: data.memberText, url: data.memberCalendarUrl, subscribe: data.memberCalendarSubscribeUrl, events: memberCalendarEvents, unavailable: memberFeed.unavailable },
     ];
-    return `<section class="interior-section calendar-section"><div class="shell"><div class="section-heading"><p class="eyebrow eyebrow-dark">${escapeHtml(data.calendarEyebrow)}</p><h2>${escapeHtml(data.calendarTitle)}</h2><p>${escapeHtml(data.calendarIntroduction)}</p></div><div class="calendar-subscriptions">${calendars.map((calendar) => `<article class="calendar-subscription"><p class="eyebrow eyebrow-dark">${escapeHtml(calendar.eyebrow)}</p><h3>${escapeHtml(calendar.title)}</h3><p>${escapeHtml(calendar.text)}</p><a class="button button-dark" href="${escapeHtml(calendar.subscribe)}" aria-label="Add ${escapeHtml(calendar.title)} to Google Calendar"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4m10-4v4M3 11h18m-9 3v4m-2-2h4"/></svg>Add to Google Calendar</a><a class="text-link" href="${escapeHtml(calendar.url)}">Open calendar <span aria-hidden="true">↗</span></a></article>`).join('')}</div>${calendars.map((calendar) => `<section class="live-calendar" aria-label="${escapeHtml(calendar.title)}"><h3>${escapeHtml(calendar.title)}</h3><iframe title="${escapeHtml(calendar.title)} — live Google Calendar" src="${escapeHtml(calendar.url)}&amp;mode=AGENDA&amp;showPrint=0&amp;showTabs=0" loading="lazy" height="500"></iframe></section>`).join('')}<p class="calendar-note">Times are shown in America/New_York. Calendars update as events are added. If a calendar does not load, use its Open calendar link above.</p></div></section>`;
+    return `<section class="interior-section calendar-section"><div class="shell"><div class="section-heading"><p class="eyebrow eyebrow-dark">${escapeHtml(data.calendarEyebrow)}</p><h2>${escapeHtml(data.calendarTitle)}</h2><p>${escapeHtml(data.calendarIntroduction)}</p></div>${calendars.map((calendar) => `<section class="calendar-block" aria-labelledby="${calendar.id}-title"><div class="calendar-block-heading"><div><h2 id="${calendar.id}-title">${escapeHtml(calendar.title)}</h2><p>${escapeHtml(calendar.text)}</p></div><div class="calendar-actions"><a class="button button-dark" href="${escapeHtml(calendar.url)}" aria-label="Open ${escapeHtml(calendar.title)} in Google Calendar">Open Google Calendar <span aria-hidden="true">↗</span></a><a class="text-link" href="${escapeHtml(calendar.subscribe)}" aria-label="Add ${escapeHtml(calendar.title)} to Google Calendar">Add to my calendar</a></div></div>${renderCalendar({ id: calendar.id, title: calendar.title, events: calendar.events, notice: calendarNotice(calendar.events, calendar.unavailable) })}</section>`).join('')}<p class="calendar-note">Schedules refresh daily. Google Calendar has the latest updates.</p></div></section>`;
   }
   if (name === 'resources') return `
       <section class="interior-section" data-reveal><div class="shell"><div class="section-heading"><p class="eyebrow eyebrow-dark">${escapeHtml(data.sectionEyebrow)}</p><h2>${escapeHtml(data.sectionTitle)}</h2><p>${escapeHtml(data.sectionText)}</p></div><div class="info-grid">${renderInfoCards(data.initiatives)}</div><p class="medical-note">${escapeHtml(data.disclaimer)}</p></div></section>`;
