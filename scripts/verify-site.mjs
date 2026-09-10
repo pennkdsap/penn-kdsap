@@ -107,7 +107,10 @@ try {
   const posthog = await readFile(join(outputDirectory, 'js/posthog.js'), 'utf8');
   const analyticsRequirements = [
     "api_host: 'https://us.i.posthog.com'", 'autocapture: false',
-    'disable_session_recording: true', "person_profiles: 'identified_only'",
+    'capture_dead_clicks: false', 'capture_exceptions: false', 'capture_heatmaps: false',
+    'capture_performance: false', 'disable_session_recording: true',
+    'disable_surveys_automatic_display: true', 'disable_web_experiments: true',
+    "person_profiles: 'identified_only'",
     "persistence: 'localStorage'", "['localhost', '127.0.0.1']",
   ];
   if (analyticsRequirements.some((requirement) => !posthog.includes(requirement))) issues.push('analytics: privacy settings or local-development exclusion are incomplete');

@@ -37,4 +37,4 @@ Images uploaded through Pages CMS are stored in `public/images`. See [CMS_EDITOR
 
 ## Analytics
 
-The public site uses PostHog for pageviews and a small set of conversion events: screening-request clicks, Google Calendar opens and subscriptions, and successful contact-form submissions. Autocapture and session recording are disabled, and form field values are never sent to PostHog. Analytics is disabled on `localhost` and `127.0.0.1` so local development does not affect production data.
+The public site uses PostHog for pageviews and a small set of conversion events: screening-request clicks, Google Calendar opens and subscriptions, and successful contact-form submissions. Autocapture, session recording, exception capture, dead-click capture, heatmaps, and performance capture are disabled, and form field values are never sent to PostHog. Analytics is disabled on `localhost` and `127.0.0.1` so local development does not affect production data.
