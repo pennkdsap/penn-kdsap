@@ -35,6 +35,10 @@ function relativeFile(pathname) {
 
 const server = createServer(async (request, response) => {
   const pathname = new URL(request.url, 'http://localhost').pathname;
+  if (request.method === 'POST' && pathname === '/test-contact') {
+    response.writeHead(200, { 'content-type': 'application/json' }).end('{}');
+    return;
+  }
   const relative = relativeFile(pathname);
   const file = normalize(join(outputDirectory, relative));
   if (!file.startsWith(`${outputDirectory}/`) && file !== join(outputDirectory, 'index.html')) {
@@ -73,6 +77,8 @@ try {
       issues.push(`${route}: redirect page is missing noindex,follow`);
     }
     if (nativeFiles.has(file)) {
+      const posthogScript = file === 'index.html' ? 'src="js/posthog.js"' : 'src="../js/posthog.js"';
+      if (!html.includes(posthogScript)) issues.push(`${route}: PostHog analytics is missing`);
       const socialRoute = file === 'index.html' ? 'home' : file.slice(0, -5);
       const requiredSocialMeta = [
         'property="og:image"', 'property="og:image:type" content="image/jpeg"',
@@ -98,10 +104,21 @@ try {
   if (Object.keys(redirects).some((file) => sitemap.includes(`/${file.slice(0, -5)}/`))) issues.push('sitemap: redirect URLs must not be listed');
   const robots = await readFile(join(outputDirectory, 'robots.txt'), 'utf8');
   if (!robots.includes(`Sitemap: ${publicSiteUrl}${deploymentBase}/sitemap.xml`)) issues.push('robots.txt: sitemap declaration is missing');
+  const posthog = await readFile(join(outputDirectory, 'js/posthog.js'), 'utf8');
+  const analyticsRequirements = [
+    "api_host: 'https://us.i.posthog.com'", 'autocapture: false',
+    'disable_session_recording: true', "person_profiles: 'identified_only'",
+    "persistence: 'localStorage'", "['localhost', '127.0.0.1']",
+  ];
+  if (analyticsRequirements.some((requirement) => !posthog.includes(requirement))) issues.push('analytics: privacy settings or local-development exclusion are incomplete');
 
   const browser = await chromium.launch({ headless: true });
+  const posthogRequests = [];
   for (const viewport of [{ name: 'desktop', width: 1440, height: 1000 }, { name: 'mobile', width: 390, height: 844 }]) {
     const page = await browser.newPage({ viewport: { width: viewport.width, height: viewport.height }, isMobile: viewport.name === 'mobile' });
+    page.on('request', (request) => {
+      if (request.url().includes('posthog.com')) posthogRequests.push(request.url());
+    });
     for (const file of pages) {
       const route = file === 'index.html' ? '/' : `/${file.slice(0, -5)}/`;
       const response = await page.goto(`${localBase}${route}`, { waitUntil: 'load' });
@@ -193,10 +210,41 @@ try {
     await widget.getByRole('button', { name: 'Previous month', exact: true }).click();
     if (await widget.getAttribute('data-month') !== initialMonth) issues.push('calendar: previous-month navigation failed');
   }
+  const calendarAnalytics = await interactions.evaluate(() => {
+    window.__capturedAnalytics = [];
+    window.posthog = { capture: (...args) => window.__capturedAnalytics.push(args) };
+    for (const link of document.querySelectorAll('.calendar-actions [data-analytics-event]')) {
+      link.addEventListener('click', (event) => event.preventDefault(), { once: true });
+      link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    }
+    return window.__capturedAnalytics;
+  });
+  if (!calendarAnalytics.some(([event]) => event === 'google_calendar_opened') || !calendarAnalytics.some(([event]) => event === 'google_calendar_subscribe_clicked')) issues.push('analytics: Google Calendar conversions are not captured');
   await interactions.goto(localBase);
   if (await interactions.locator('[data-custom-calendar]').count() !== 1) issues.push('home: native calendar is missing');
   const sampleCards = interactions.locator('.custom-event').filter({ has: interactions.locator('.sample-badge') });
   if (await sampleCards.count() && !(await interactions.locator('.custom-calendar-notice').innerText()).includes('fictional')) issues.push('calendar: examples need a clear disclaimer');
+  const screeningAnalytics = await interactions.evaluate(() => {
+    window.__capturedAnalytics = [];
+    window.posthog = { capture: (...args) => window.__capturedAnalytics.push(args) };
+    const link = document.querySelector('[data-analytics-event="screening_request_clicked"]');
+    link.addEventListener('click', (event) => event.preventDefault(), { once: true });
+    link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+    return window.__capturedAnalytics;
+  });
+  if (screeningAnalytics[0]?.[0] !== 'screening_request_clicked' || !screeningAnalytics[0]?.[1]?.location) issues.push('analytics: screening-request conversion is not captured with its location');
+  await interactions.goto(`${localBase}/contact-us/`);
+  await interactions.evaluate((endpoint) => {
+    window.__capturedAnalytics = [];
+    window.posthog = { capture: (...args) => window.__capturedAnalytics.push(args) };
+    const form = document.querySelector('[data-contact-form]');
+    form.dataset.endpoint = endpoint;
+    form.dispatchEvent(new SubmitEvent('submit', { bubbles: true, cancelable: true }));
+  }, `${localBase}/test-contact`);
+  await interactions.waitForFunction(() => window.__capturedAnalytics?.some(([event]) => event === 'contact_form_submitted'));
+  const contactAnalytics = await interactions.evaluate(() => window.__capturedAnalytics);
+  if (contactAnalytics.some(([, properties]) => properties && Object.keys(properties).some((key) => !['form'].includes(key)))) issues.push('analytics: contact submission includes form field data');
+  if (posthogRequests.length) issues.push(`analytics: local verification sent PostHog requests (${posthogRequests.join(', ')})`);
   await interactions.close();
   await browser.close();
 } finally {
