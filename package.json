@@ -21,6 +21,7 @@
     "typescript": "^5.9.2"
   },
   "dependencies": {
-    "leaflet": "^1.9.4"
+    "leaflet": "^1.9.4",
+    "simple-icons": "^16.30.0"
   }
 }

@@ -15,7 +15,8 @@
     <meta name="twitter:image" content="https://akashdubey.me/penn-kdsap/images/penn-kdsap-og.png">
     <title>{{PAGE_TITLE}}</title>
     <link rel="icon" href="favicon.png" type="image/png">
-    <link rel="preload" as="image" href="{{HERO_IMAGE}}" type="image/webp" fetchpriority="high">
+    <link rel="preload" as="image" href="{{HERO_DESKTOP_PRELOAD}}" media="(min-width: 641px)" fetchpriority="high">
+    <link rel="preload" as="image" href="{{HERO_MOBILE_PRELOAD}}" media="(max-width: 640px)" fetchpriority="high">
     <script>try{const t=localStorage.getItem('penn-kdsap-theme');document.documentElement.dataset.theme=t==='dark'||t==='light'?t:matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}catch{document.documentElement.dataset.theme='light'}</script>
     <link rel="stylesheet" href="vendor/leaflet/leaflet.css">
     <link rel="stylesheet" href="css/site.css">
@@ -40,7 +41,9 @@
 
     <main id="main">
       <section class="hero" aria-labelledby="hero-title">
-        <img class="hero-image" src="{{HERO_IMAGE}}" alt="{{HERO_IMAGE_ALT}}" width="1800" height="1200" fetchpriority="high">
+        <div class="hero-media" data-hero-slideshow data-interval="{{HERO_ROTATION_INTERVAL}}">
+          {{HERO_SLIDES}}
+        </div>
         <div class="hero-shade"></div>
         <div class="shell hero-content">
           <p class="eyebrow">{{HERO_EYEBROW}}</p>
@@ -51,6 +54,10 @@
             <a class="button button-secondary" href="{{HERO_SECONDARY_URL}}">{{HERO_SECONDARY_LABEL}}</a>
           </div>
           <a class="student-link" href="{{HERO_STUDENT_URL}}">{{HERO_STUDENT_LABEL}} <span aria-hidden="true">→</span></a>
+        </div>
+        <div class="hero-slideshow-controls" role="group" aria-label="{{HERO_SLIDE_PICKER_LABEL}}">
+          <button class="hero-slideshow-toggle" type="button" data-hero-toggle data-pause-label="{{HERO_PAUSE_LABEL}}" data-play-label="{{HERO_PLAY_LABEL}}" aria-label="{{HERO_PAUSE_LABEL}}"><span aria-hidden="true"></span></button>
+          <div class="hero-slide-dots">{{HERO_SLIDE_DOTS}}</div>
         </div>
       </section>
 
@@ -179,11 +186,13 @@
         <div>
           <h2>{{FOOTER_CONNECT_HEADING}}</h2>
           {{FOOTER_CONNECT_LINKS}}
+          <h2 class="footer-social-heading">{{FOOTER_SOCIAL_HEADING}}</h2>
+          <div class="social-links">{{FOOTER_SOCIAL_LINKS}}</div>
         </div>
       </div>
       <div class="shell footer-bottom">
         <p>© {{CURRENT_YEAR}} {{FOOTER_COPYRIGHT}}</p>
-        <p>{{FOOTER_AFFILIATION}}</p>
+        {{FOOTER_AFFILIATION_BLOCK}}
         <button class="theme-toggle" type="button" data-theme-toggle data-dark-label="{{FOOTER_DARK_MODE_LABEL}}" data-light-label="{{FOOTER_LIGHT_MODE_LABEL}}" aria-pressed="false"><span class="theme-toggle-icon" aria-hidden="true"></span><span data-theme-label>{{FOOTER_DARK_MODE_LABEL}}</span></button>
       </div>
     </footer>

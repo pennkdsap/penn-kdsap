@@ -108,14 +108,59 @@ content:
                 label: Supporting text
                 type: text
                 required: true
-              - name: image
-                label: Background image
-                type: image
+              - name: rotationInterval
+                label: Photo rotation interval (milliseconds)
+                type: number
                 required: true
-              - name: imageAlt
-                label: Background image description
+              - name: slidePickerLabel
+                label: Photo controls accessible label
                 type: string
                 required: true
+              - name: pauseLabel
+                label: Pause button accessible text
+                type: string
+                required: true
+              - name: playLabel
+                label: Play button accessible text
+                type: string
+                required: true
+              - name: showSlideLabel
+                label: Photo button accessible text
+                type: string
+                description: Keep {number} where the photo number should appear.
+                required: true
+              - name: slides
+                label: Rotating hero photos
+                type: object
+                description: Add, remove, and reorder photos. Choose a wide desktop image and a portrait-oriented mobile image for each slide.
+                list:
+                  collapsible:
+                    collapsed: true
+                    summary: "{imageAlt}"
+                required: true
+                fields:
+                  - name: desktopImage
+                    label: Desktop image
+                    type: image
+                    required: true
+                  - name: mobileImage
+                    label: Mobile image
+                    type: image
+                    required: true
+                  - name: imageAlt
+                    label: Image description
+                    type: string
+                    required: true
+                  - name: desktopPosition
+                    label: Desktop focal position
+                    type: string
+                    description: CSS position such as 55% center.
+                    required: true
+                  - name: mobilePosition
+                    label: Mobile focal position
+                    type: string
+                    description: CSS position such as 50% center.
+                    required: true
               - name: actionsLabel
                 label: Actions accessible label
                 type: string
@@ -502,6 +547,49 @@ content:
                     label: Link path
                     type: string
                     required: true
+              - name: socialHeading
+                label: Social links heading
+                type: string
+                required: true
+              - name: socialLinks
+                label: Social media links
+                type: object
+                list:
+                  collapsible:
+                    collapsed: true
+                    summary: "{network} — {label}"
+                required: true
+                fields:
+                  - name: network
+                    label: Network icon
+                    type: select
+                    options:
+                      values:
+                        - value: facebook
+                          label: Facebook
+                        - value: instagram
+                          label: Instagram
+                    required: true
+                  - name: label
+                    label: Accessible link text
+                    type: string
+                    required: true
+                  - name: url
+                    label: Profile URL
+                    type: string
+                    required: true
+              - name: universityLogo
+                label: University logo
+                type: image
+                required: true
+              - name: universityLogoAlt
+                label: University logo description
+                type: string
+                required: true
+              - name: universityUrl
+                label: University website URL
+                type: string
+                required: true
               - name: darkModeLabel
                 label: Dark mode button text
                 type: string

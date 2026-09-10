@@ -1,5 +1,6 @@
 import { cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { siFacebook, siInstagram } from 'simple-icons';
 
 const root = process.cwd();
 const sourceDirectory = join(root, 'site-html-archive/pages');
@@ -154,6 +155,7 @@ const escapeHtml = (value) => String(value)
   .replaceAll('"', '&quot;')
   .replaceAll("'", '&#39;');
 const assetPath = (value) => String(value).replace(/^\/+/, '');
+const socialIcons = { facebook: siFacebook, instagram: siInstagram };
 const renderLinks = (links) => links
   .map(({ label, url }) => `<a href="${escapeHtml(url)}">${escapeHtml(label)}</a>`)
   .join('\n          ');
@@ -161,6 +163,19 @@ const renderPrefixedLinks = (links) => links
   .map(({ label, url }) => `<a href="../${escapeHtml(String(url).replace(/^\/+/, ''))}">${escapeHtml(label)}</a>`)
   .join('\n          ');
 const navigation = renderLinks(homeContent.navigation);
+const heroSlides = homeContent.hero.slides.map((slide, index) => {
+  const desktopPosition = slide.desktopPosition || 'center center';
+  const mobilePosition = slide.mobilePosition || 'center center';
+  return `<picture class="hero-slide${index === 0 ? ' is-active' : ''}" data-hero-slide aria-hidden="${index === 0 ? 'false' : 'true'}" style="--hero-desktop-position:${escapeHtml(desktopPosition)};--hero-mobile-position:${escapeHtml(mobilePosition)}"><source media="(max-width: 640px)" srcset="${escapeHtml(assetPath(slide.mobileImage))}"><img src="${escapeHtml(assetPath(slide.desktopImage))}" alt="${escapeHtml(slide.imageAlt)}" width="1800" height="1200" ${index === 0 ? 'fetchpriority="high"' : 'loading="lazy"'}></picture>`;
+}).join('');
+const heroSlideDots = homeContent.hero.slides.map((_, index) => `<button type="button" class="hero-slide-dot${index === 0 ? ' is-active' : ''}" data-hero-dot="${index}" aria-label="${escapeHtml(homeContent.hero.showSlideLabel.replace('{number}', String(index + 1)))}" aria-current="${index === 0 ? 'true' : 'false'}"><span></span></button>`).join('');
+const renderSocialLinks = () => homeContent.footer.socialLinks.map((link) => {
+  const key = String(link.network).toLowerCase();
+  const icon = socialIcons[key];
+  if (!icon) throw new Error(`Unsupported footer social network: ${link.network}`);
+  return `<a class="social-link social-link-${escapeHtml(key)}" href="${escapeHtml(link.url)}" target="_blank" rel="noopener" aria-label="${escapeHtml(link.label)}"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="${icon.path}"></path></svg></a>`;
+}).join('');
+const footerAffiliation = (prefix = '') => `<div class="footer-affiliation"><a class="footer-university" href="${escapeHtml(homeContent.footer.universityUrl)}" target="_blank" rel="noopener"><img src="${prefix}${escapeHtml(assetPath(homeContent.footer.universityLogo))}" alt="${escapeHtml(homeContent.footer.universityLogoAlt)}" width="2500" height="1500" loading="lazy"></a><p>${escapeHtml(homeContent.footer.affiliation)}</p></div>`;
 const pathwayItems = homeContent.pathways.items.map((item) => `
             <article class="path-card">
               <span class="path-number" aria-hidden="true">${escapeHtml(item.number)}</span>
@@ -311,6 +326,9 @@ const renderNativePage = (name, data) => nativeTemplate
   .replaceAll('{{FOOTER_EXPLORE_LINKS}}', renderPrefixedLinks(homeContent.footer.exploreLinks))
   .replaceAll('{{FOOTER_CONNECT_HEADING}}', escapeHtml(homeContent.footer.connectHeading))
   .replaceAll('{{FOOTER_CONNECT_LINKS}}', renderPrefixedLinks(homeContent.footer.connectLinks))
+  .replaceAll('{{FOOTER_SOCIAL_HEADING}}', escapeHtml(homeContent.footer.socialHeading))
+  .replaceAll('{{FOOTER_SOCIAL_LINKS}}', renderSocialLinks())
+  .replaceAll('{{FOOTER_AFFILIATION_BLOCK}}', footerAffiliation('../'))
   .replaceAll('{{FOOTER_DARK_MODE_LABEL}}', escapeHtml(homeContent.footer.darkModeLabel))
   .replaceAll('{{FOOTER_LIGHT_MODE_LABEL}}', escapeHtml(homeContent.footer.lightModeLabel))
   .replaceAll('{{FOOTER_COPYRIGHT}}', escapeHtml(homeContent.footer.copyright))
@@ -353,8 +371,14 @@ for (const page of pages) {
       .replaceAll('{{NAVIGATION}}', navigation)
       .replaceAll('{{HEADER_ACTION_LABEL}}', escapeHtml(homeContent.headerAction.label))
       .replaceAll('{{HEADER_ACTION_URL}}', escapeHtml(homeContent.headerAction.url))
-      .replaceAll('{{HERO_IMAGE}}', escapeHtml(assetPath(homeContent.hero.image)))
-      .replaceAll('{{HERO_IMAGE_ALT}}', escapeHtml(homeContent.hero.imageAlt))
+      .replaceAll('{{HERO_DESKTOP_PRELOAD}}', escapeHtml(assetPath(homeContent.hero.slides[0].desktopImage)))
+      .replaceAll('{{HERO_MOBILE_PRELOAD}}', escapeHtml(assetPath(homeContent.hero.slides[0].mobileImage)))
+      .replaceAll('{{HERO_SLIDES}}', heroSlides)
+      .replaceAll('{{HERO_SLIDE_DOTS}}', heroSlideDots)
+      .replaceAll('{{HERO_ROTATION_INTERVAL}}', String(homeContent.hero.rotationInterval))
+      .replaceAll('{{HERO_SLIDE_PICKER_LABEL}}', escapeHtml(homeContent.hero.slidePickerLabel))
+      .replaceAll('{{HERO_PAUSE_LABEL}}', escapeHtml(homeContent.hero.pauseLabel))
+      .replaceAll('{{HERO_PLAY_LABEL}}', escapeHtml(homeContent.hero.playLabel))
       .replaceAll('{{HERO_EYEBROW}}', escapeHtml(homeContent.hero.eyebrow))
       .replaceAll('{{HERO_TITLE}}', escapeHtml(homeContent.hero.title))
       .replaceAll('{{HERO_SUMMARY}}', escapeHtml(homeContent.hero.summary))
@@ -416,6 +440,9 @@ for (const page of pages) {
       .replaceAll('{{FOOTER_EXPLORE_LINKS}}', renderLinks(homeContent.footer.exploreLinks))
       .replaceAll('{{FOOTER_CONNECT_HEADING}}', escapeHtml(homeContent.footer.connectHeading))
       .replaceAll('{{FOOTER_CONNECT_LINKS}}', renderLinks(homeContent.footer.connectLinks))
+      .replaceAll('{{FOOTER_SOCIAL_HEADING}}', escapeHtml(homeContent.footer.socialHeading))
+      .replaceAll('{{FOOTER_SOCIAL_LINKS}}', renderSocialLinks())
+      .replaceAll('{{FOOTER_AFFILIATION_BLOCK}}', footerAffiliation())
       .replaceAll('{{FOOTER_DARK_MODE_LABEL}}', escapeHtml(homeContent.footer.darkModeLabel))
       .replaceAll('{{FOOTER_LIGHT_MODE_LABEL}}', escapeHtml(homeContent.footer.lightModeLabel))
       .replaceAll('{{FOOTER_COPYRIGHT}}', escapeHtml(homeContent.footer.copyright))

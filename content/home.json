@@ -24,8 +24,17 @@
     "eyebrow": "Penn Kidney Disease Screening and Awareness Program",
     "title": "Free kidney health screenings in partnership with Philadelphia communities",
     "summary": "Penn students and physicians work with local organizations to provide screening, education, and clear next steps for care.",
-    "image": "/images/hero-1800.webp",
-    "imageAlt": "Penn KDSAP volunteers at a community kidney health screening",
+    "rotationInterval": 6500,
+    "slidePickerLabel": "Choose a homepage photo",
+    "pauseLabel": "Pause rotating photos",
+    "playLabel": "Play rotating photos",
+    "showSlideLabel": "Show photo {number}",
+    "slides": [
+      { "desktopImage": "/images/hero-1800.webp", "mobileImage": "/images/reel/screening-check.webp", "imageAlt": "Penn KDSAP volunteers at a community kidney health screening", "desktopPosition": "54% center", "mobilePosition": "56% center" },
+      { "desktopImage": "/images/slide-community-1400.webp", "mobileImage": "/images/gallery/d07601_f8724db9da3d4990a89acafc179656c9~mv2.jpg", "imageAlt": "Penn KDSAP volunteers and clinicians working with community members", "desktopPosition": "55% center", "mobilePosition": "50% center" },
+      { "desktopImage": "/images/reel/blood-pressure-training.webp", "mobileImage": "/images/gallery/d07601_c49642bc6dd543d2b1587f126d8c6c2e~mv2.jpg", "imageAlt": "Penn students practicing kidney screening skills during volunteer training", "desktopPosition": "62% center", "mobilePosition": "52% center" },
+      { "desktopImage": "/images/slide-volunteers-1400.webp", "mobileImage": "/images/gallery/d07601_db4bdb1262c0429baf976a41db573b31~mv2.jpg", "imageAlt": "Penn KDSAP volunteers sharing kidney health information", "desktopPosition": "58% center", "mobilePosition": "50% center" }
+    ],
     "actionsLabel": "Featured actions",
     "primaryAction": { "label": "Find a screening", "url": "kidney-screenings/" },
     "secondaryAction": { "label": "Request a screening", "url": "contact-us/" },
@@ -135,6 +144,14 @@
       { "label": "Events", "url": "calendar/" },
       { "label": "For students", "url": "kdsap/" }
     ],
+    "socialHeading": "Follow Penn KDSAP",
+    "socialLinks": [
+      { "network": "facebook", "label": "Penn KDSAP on Facebook", "url": "https://www.facebook.com/pennkdsap" },
+      { "network": "instagram", "label": "Penn KDSAP on Instagram", "url": "https://www.instagram.com/pennkdsap/" }
+    ],
+    "universityLogo": "/images/upenn-logo-reverse.png",
+    "universityLogoAlt": "University of Pennsylvania",
+    "universityUrl": "https://www.upenn.edu/",
     "darkModeLabel": "Dark mode",
     "lightModeLabel": "Light mode",
     "copyright": "Penn KDSAP",

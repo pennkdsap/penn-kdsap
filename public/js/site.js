@@ -23,6 +23,53 @@
     applyTheme(event.matches ? 'dark' : 'light');
   });
 
+  const slideshow = document.querySelector('[data-hero-slideshow]');
+  const slides = [...document.querySelectorAll('[data-hero-slide]')];
+  const slideDots = [...document.querySelectorAll('[data-hero-dot]')];
+  const slideshowToggle = document.querySelector('[data-hero-toggle]');
+  if (slideshow && slides.length > 1 && slideshowToggle) {
+    let activeSlide = 0;
+    let timer;
+    let paused = reduceMotion.matches;
+    const interval = Math.max(3000, Number(slideshow.dataset.interval) || 6500);
+    const showSlide = (index) => {
+      activeSlide = (index + slides.length) % slides.length;
+      slides.forEach((slide, slideIndex) => {
+        const active = slideIndex === activeSlide;
+        slide.classList.toggle('is-active', active);
+        slide.setAttribute('aria-hidden', String(!active));
+      });
+      slideDots.forEach((dot, dotIndex) => {
+        const active = dotIndex === activeSlide;
+        dot.classList.toggle('is-active', active);
+        dot.setAttribute('aria-current', String(active));
+      });
+    };
+    const stopRotation = () => window.clearInterval(timer);
+    const startRotation = () => {
+      stopRotation();
+      if (!paused && !document.hidden) timer = window.setInterval(() => showSlide(activeSlide + 1), interval);
+    };
+    const updateToggle = () => {
+      slideshowToggle.classList.toggle('is-paused', paused);
+      slideshowToggle.setAttribute('aria-label', paused ? slideshowToggle.dataset.playLabel : slideshowToggle.dataset.pauseLabel);
+    };
+    slideDots.forEach((dot, index) => dot.addEventListener('click', () => {
+      showSlide(index);
+      startRotation();
+    }));
+    slideshowToggle.addEventListener('click', () => {
+      paused = !paused;
+      updateToggle();
+      startRotation();
+    });
+    document.addEventListener('visibilitychange', startRotation);
+    updateToggle();
+    startRotation();
+  } else {
+    slideshowToggle?.remove();
+  }
+
   const updateScrollEffects = () => {
     header?.classList.toggle('is-scrolled', window.scrollY > 24);
     if (!reduceMotion.matches) {
@@ -108,7 +155,6 @@
         .bindTooltip(tooltip, { direction: 'top', offset: [0, -36] });
       leafletMarkers.push(marker);
       marker.on('mouseover focus click', () => selectMapSite(index));
-      leafletMarkers.push(marker);
       pin.remove();
     });
   }
