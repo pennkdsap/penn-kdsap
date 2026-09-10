@@ -606,6 +606,47 @@ content:
                 label: Affiliation text
                 type: string
                 required: true
+      - name: seo
+        label: Search and social previews
+        type: file
+        path: content/seo.json
+        format: json
+        operations:
+          delete: false
+        fields:
+          - name: socialCardAttribution
+            label: Social preview attribution
+            type: string
+            required: true
+          - name: socialCardFooter
+            label: Social preview footer line
+            type: string
+            required: true
+          - name: pages
+            label: Page search metadata
+            type: object
+            description: Keep the route unchanged. Update Last modified whenever that page receives a meaningful content, structured-data, or link change.
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{label} — {route}"
+            required: true
+            fields:
+              - name: route
+                label: Route
+                type: string
+              - name: label
+                label: Social preview section label
+                type: string
+                required: true
+              - name: lastModified
+                label: Last meaningful update
+                type: date
+                required: true
+              - name: imageAlt
+                label: Social preview image description
+                type: string
+                required: true
       - name: leadership
         label: Leadership team
         type: file

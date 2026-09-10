@@ -2,6 +2,7 @@ import { createServer } from 'node:http';
 import { readFile, readdir } from 'node:fs/promises';
 import { extname, join, normalize } from 'node:path';
 import { chromium } from 'playwright';
+import sharp from 'sharp';
 
 const root = process.cwd();
 const outputDirectory = join(root, 'dist');
@@ -68,7 +69,35 @@ try {
     if (html.includes('href="https://www.pennkdsap.org')) {
       issues.push(`${route}: still links to the source site`);
     }
+    if (redirects[file] && !html.includes('content="noindex,follow"')) {
+      issues.push(`${route}: redirect page is missing noindex,follow`);
+    }
+    if (nativeFiles.has(file)) {
+      const socialRoute = file === 'index.html' ? 'home' : file.slice(0, -5);
+      const requiredSocialMeta = [
+        'property="og:image"', 'property="og:image:type" content="image/jpeg"',
+        'property="og:image:width" content="1200"', 'property="og:image:height" content="630"',
+        'property="og:image:alt"', 'name="twitter:title"', 'name="twitter:description"',
+        'name="twitter:image"', 'name="twitter:image:alt"',
+      ];
+      if (requiredSocialMeta.some((tag) => !html.includes(tag))) issues.push(`${route}: social preview metadata is incomplete`);
+      try {
+        const metadata = await sharp(join(outputDirectory, `images/social/${socialRoute}.jpg`)).metadata();
+        if (metadata.width !== 1200 || metadata.height !== 630 || metadata.format !== 'jpeg') issues.push(`${route}: social preview image has the wrong format or dimensions`);
+      } catch {
+        issues.push(`${route}: social preview image is missing`);
+      }
+    }
   }
+
+  const sitemap = await readFile(join(outputDirectory, 'sitemap.xml'), 'utf8');
+  const canonicalCount = nativeFiles.size;
+  if ((sitemap.match(/<url>/g) ?? []).length !== canonicalCount) issues.push('sitemap: canonical URL count is incorrect');
+  if ((sitemap.match(/<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/g) ?? []).length !== canonicalCount) issues.push('sitemap: last-modified dates are missing or invalid');
+  if ((sitemap.match(/<image:image>/g) ?? []).length !== canonicalCount * 2 || !sitemap.includes('xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"')) issues.push('sitemap: image metadata is incomplete');
+  if (Object.keys(redirects).some((file) => sitemap.includes(`/${file.slice(0, -5)}/`))) issues.push('sitemap: redirect URLs must not be listed');
+  const robots = await readFile(join(outputDirectory, 'robots.txt'), 'utf8');
+  if (!robots.includes(`Sitemap: ${publicSiteUrl}${deploymentBase}/sitemap.xml`)) issues.push('robots.txt: sitemap declaration is missing');
 
   const browser = await chromium.launch({ headless: true });
   for (const viewport of [{ name: 'desktop', width: 1440, height: 1000 }, { name: 'mobile', width: 390, height: 844 }]) {

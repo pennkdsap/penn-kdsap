@@ -18,6 +18,7 @@
     "@types/node": "^24.3.0",
     "astro": "^5.13.5",
     "playwright": "^1.55.0",
+    "sharp": "^0.34.5",
     "typescript": "^5.9.2"
   },
   "dependencies": {

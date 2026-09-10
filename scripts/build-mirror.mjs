@@ -1,16 +1,17 @@
 import { cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { siFacebook, siInstagram } from 'simple-icons';
+import sharp from 'sharp';
 
 const root = process.cwd();
 const sourceDirectory = join(root, 'site-html-archive/pages');
 const outputDirectory = join(root, 'dist');
 const deploymentBase = '/penn-kdsap';
 const publicSiteUrl = 'https://akashdubey.me';
-const ogImageUrl = 'https://akashdubey.me/penn-kdsap/images/penn-kdsap-og.png';
 const pages = (await readdir(sourceDirectory)).filter((file) => file.endsWith('.html'));
 const homeTemplate = await readFile(join(root, 'content/home-page.html'), 'utf8');
 const homeContent = JSON.parse(await readFile(join(root, 'content/home.json'), 'utf8'));
+const seoContent = JSON.parse(await readFile(join(root, 'content/seo.json'), 'utf8'));
 const nativeTemplate = await readFile(join(root, 'content/native-page.html'), 'utf8');
 const nativeFiles = {
   'about.html': 'about',
@@ -156,6 +157,8 @@ const escapeHtml = (value) => String(value)
   .replaceAll("'", '&#39;');
 const assetPath = (value) => String(value).replace(/^\/+/, '');
 const socialIcons = { facebook: siFacebook, instagram: siInstagram };
+const seoPageByRoute = new Map(seoContent.pages.map((page) => [page.route, page]));
+const socialImageUrl = (route) => `${publicSiteUrl}${deploymentBase}/images/social/${route || 'home'}.jpg`;
 const renderLinks = (links) => links
   .map(({ label, url }) => `<a href="${escapeHtml(url)}">${escapeHtml(label)}</a>`)
   .join('\n          ');
@@ -176,6 +179,40 @@ const renderSocialLinks = () => homeContent.footer.socialLinks.map((link) => {
   return `<a class="social-link social-link-${escapeHtml(key)}" href="${escapeHtml(link.url)}" target="_blank" rel="noopener" aria-label="${escapeHtml(link.label)}"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="${icon.path}"></path></svg></a>`;
 }).join('');
 const footerAffiliation = (prefix = '') => `<div class="footer-affiliation"><a class="footer-university" href="${escapeHtml(homeContent.footer.universityUrl)}" target="_blank" rel="noopener"><img src="${prefix}${escapeHtml(assetPath(homeContent.footer.universityLogo))}" alt="${escapeHtml(homeContent.footer.universityLogoAlt)}" width="2500" height="1500" loading="lazy"></a><p>${escapeHtml(homeContent.footer.affiliation)}</p></div>`;
+const wrapSocialTitle = (value, maxCharacters = 23) => {
+  const lines = [];
+  let line = '';
+  for (const word of String(value).split(/\s+/)) {
+    if (!line || `${line} ${word}`.length <= maxCharacters) line = line ? `${line} ${word}` : word;
+    else { lines.push(line); line = word; }
+  }
+  if (line) lines.push(line);
+  return lines;
+};
+const renderSocialCard = async ({ route, title, heroImage }) => {
+  const seo = seoPageByRoute.get(route);
+  if (!seo) throw new Error(`Missing SEO configuration for /${route}`);
+  const lines = wrapSocialTitle(title);
+  const fontSize = lines.length > 3 ? 47 : lines.length > 2 ? 53 : 61;
+  const lineHeight = Math.round(fontSize * 1.05);
+  const titleMarkup = lines.map((line, index) => `<tspan x="72" dy="${index ? lineHeight : 0}">${escapeHtml(line)}</tspan>`).join('');
+  const overlay = Buffer.from(`<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="shade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#061a34" stop-opacity=".98"/><stop offset=".52" stop-color="#071f3d" stop-opacity=".89"/><stop offset="1" stop-color="#071f3d" stop-opacity=".18"/></linearGradient><linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset=".5" stop-color="#071f3d" stop-opacity="0"/><stop offset="1" stop-color="#071f3d" stop-opacity=".72"/></linearGradient></defs><rect width="1200" height="630" fill="url(#shade)"/><rect width="1200" height="630" fill="url(#floor)"/><rect x="72" y="170" width="54" height="5" rx="2.5" fill="#d53452"/><text x="72" y="151" fill="#f39aaa" font-family="Arial,Helvetica,sans-serif" font-size="17" font-weight="700" letter-spacing="2.4">${escapeHtml(seo.label.toUpperCase())}</text><text x="72" y="236" fill="#ffffff" font-family="Georgia,Times New Roman,serif" font-size="${fontSize}" font-weight="500">${titleMarkup}</text><text x="72" y="577" fill="#dbe6f0" font-family="Arial,Helvetica,sans-serif" font-size="19" font-weight="600">${escapeHtml(seoContent.socialCardFooter)}</text><text x="1128" y="578" text-anchor="end" fill="#ffffff" font-family="Arial,Helvetica,sans-serif" font-size="16" font-weight="700" letter-spacing="1.5">${escapeHtml(seoContent.socialCardAttribution.toUpperCase())}</text></svg>`);
+  const logo = await sharp(join(root, 'public/images/penn-kdsap-logo.png')).resize({ width: 240 }).linear(0, 255).png().toBuffer();
+  return sharp(join(root, 'public', assetPath(heroImage)))
+    .resize(1200, 630, { fit: 'cover', position: 'centre' })
+    .modulate({ saturation: .88, brightness: .94 })
+    .composite([{ input: overlay }, { input: logo, left: 72, top: 54 }])
+    .jpeg({ quality: 88, progressive: true, chromaSubsampling: '4:4:4' });
+};
+const canonicalPageData = [
+  { route: '', title: homeContent.hero.title, pageTitle: homeContent.pageTitle, heroImage: homeContent.hero.slides[0].desktopImage },
+  ...Object.entries(nativeFiles).map(([file, name]) => ({
+    route: file.slice(0, -5),
+    title: nativeContent[name].title,
+    pageTitle: nativeContent[name].pageTitle,
+    heroImage: nativeContent[name].heroImage,
+  })),
+].sort((a, b) => a.route.localeCompare(b.route));
 const pathwayItems = homeContent.pathways.items.map((item) => `
             <article class="path-card">
               <span class="path-number" aria-hidden="true">${escapeHtml(item.number)}</span>
@@ -299,9 +336,11 @@ const renderNativeBody = (name, data) => {
   }
   throw new Error(`Unknown native page type: ${name}`);
 };
-const renderNativePage = (name, data) => nativeTemplate
+const renderNativePage = (name, data, route) => nativeTemplate
   .replaceAll('{{PAGE_TITLE}}', escapeHtml(data.pageTitle))
   .replaceAll('{{META_DESCRIPTION}}', escapeHtml(data.metaDescription))
+  .replaceAll('{{SOCIAL_IMAGE}}', escapeHtml(socialImageUrl(route)))
+  .replaceAll('{{SOCIAL_IMAGE_ALT}}', escapeHtml(seoPageByRoute.get(route)?.imageAlt || data.heroImageAlt))
   .replaceAll('{{SITE_NAME}}', escapeHtml(homeContent.siteName))
   .replaceAll('{{SKIP_LINK_TEXT}}', escapeHtml(homeContent.skipLinkText))
   .replaceAll('{{BRAND_ALT}}', escapeHtml(homeContent.brandAlt))
@@ -334,15 +373,10 @@ const renderNativePage = (name, data) => nativeTemplate
   .replaceAll('{{FOOTER_COPYRIGHT}}', escapeHtml(homeContent.footer.copyright))
   .replaceAll('{{FOOTER_AFFILIATION}}', escapeHtml(homeContent.footer.affiliation))
   .replaceAll('{{CURRENT_YEAR}}', String(new Date().getFullYear()));
-const renderRedirect = (target) => `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${escapeHtml(homeContent.redirectPage.pageTitle)}</title><meta http-equiv="refresh" content="0; url=../${escapeHtml(target)}/"><link rel="canonical" href="${publicSiteUrl}${deploymentBase}/${escapeHtml(target)}/"></head><body><p>${escapeHtml(homeContent.redirectPage.message)}</p><a href="../${escapeHtml(target)}/">${escapeHtml(homeContent.redirectPage.actionLabel)}</a></body></html>`;
+const renderRedirect = (target) => `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,follow"><title>${escapeHtml(homeContent.redirectPage.pageTitle)}</title><meta http-equiv="refresh" content="0; url=../${escapeHtml(target)}/"><link rel="canonical" href="${publicSiteUrl}${deploymentBase}/${escapeHtml(target)}/"></head><body><p>${escapeHtml(homeContent.redirectPage.message)}</p><a href="../${escapeHtml(target)}/">${escapeHtml(homeContent.redirectPage.actionLabel)}</a></body></html>`;
 const localizeWixMedia = (html) => html
   .replace(/https:\/\/static\.wixstatic\.com\/media\/([^\/"')?]+)(?:\/v1\/[^"')?\s<]+)?/g, (_, name) => `${deploymentBase}/images/wix/${decodeURIComponent(name)}`)
   .replace(/https:\\\/\\\/static\.wixstatic\.com\\\/media\\\/([^\\\/"')?]+)(?:\\\/v1\\\/[^\\"')?\s<]+)?/g, (_, name) => `${deploymentBase}/images/wix/${decodeURIComponent(name)}`);
-const setShareImage = (html) => html
-  .replace(/(<meta property="og:image" content=")[^"]+("\/>)/g, `$1${ogImageUrl}$2`)
-  .replace(/(<meta property="og:image:width" content=")[^"]+("\/>)/g, (_, start, end) => `${start}1200${end}`)
-  .replace(/(<meta property="og:image:height" content=")[^"]+("\/>)/g, (_, start, end) => `${start}630${end}`)
-  .replace(/(<meta name="twitter:image" content=")[^"]+("\/>)/g, `$1${ogImageUrl}$2`);
 const setSeoUrls = (html, pagePath) => {
   const canonicalUrl = `${publicSiteUrl}${deploymentBase}${pagePath}`;
   const canonical = `<link rel="canonical" href="${canonicalUrl}"/>`;
@@ -363,6 +397,8 @@ for (const page of pages) {
     ? homeTemplate
       .replaceAll('{{PAGE_TITLE}}', escapeHtml(homeContent.pageTitle))
       .replaceAll('{{META_DESCRIPTION}}', escapeHtml(homeContent.metaDescription))
+      .replaceAll('{{SOCIAL_IMAGE}}', escapeHtml(socialImageUrl('')))
+      .replaceAll('{{SOCIAL_IMAGE_ALT}}', escapeHtml(seoPageByRoute.get('')?.imageAlt || homeContent.hero.slides[0].imageAlt))
       .replaceAll('{{SITE_NAME}}', escapeHtml(homeContent.siteName))
       .replaceAll('{{SKIP_LINK_TEXT}}', escapeHtml(homeContent.skipLinkText))
       .replaceAll('{{BRAND_ALT}}', escapeHtml(homeContent.brandAlt))
@@ -449,7 +485,7 @@ for (const page of pages) {
       .replaceAll('{{FOOTER_AFFILIATION}}', escapeHtml(homeContent.footer.affiliation))
       .replaceAll('{{CURRENT_YEAR}}', String(new Date().getFullYear()))
     : nativeFiles[page]
-    ? renderNativePage(nativeFiles[page], nativeContent[nativeFiles[page]])
+    ? renderNativePage(nativeFiles[page], nativeContent[nativeFiles[page]], page.slice(0, -5))
     : redirects[page]
     ? renderRedirect(redirects[page])
     : await readFile(join(sourceDirectory, page), 'utf8');
@@ -463,7 +499,6 @@ for (const page of pages) {
     .replaceAll('https://www.pennkdsap.org/', `${deploymentBase}/`)
     .replaceAll('https://www.pennkdsap.org', deploymentBase);
   html = localizeWixMedia(html);
-  html = setShareImage(html);
   const pagePath = page === 'index.html' ? '/' : redirects[page] ? `/${redirects[page]}/` : `/${page.slice(0, -5)}/`;
   html = setSeoUrls(html, pagePath);
   const staticLayoutScript = page === 'index.html' || nativeFiles[page] || redirects[page]
@@ -481,13 +516,20 @@ for (const page of pages) {
 
 await cp(join(root, 'public'), outputDirectory, { recursive: true });
 await cp(join(root, 'content'), join(outputDirectory, 'content'), { recursive: true });
-const sitemapUrls = pages
-  .filter((page) => !redirects[page])
-  .sort()
-  .map((page) => page === 'index.html' ? `${publicSiteUrl}${deploymentBase}/` : `${publicSiteUrl}${deploymentBase}/${page.slice(0, -5)}/`)
-  .map((url) => `  <url><loc>${url}</loc></url>`)
+const socialPreviewDirectory = join(outputDirectory, 'images/social');
+await mkdir(socialPreviewDirectory, { recursive: true });
+for (const page of canonicalPageData) {
+  await renderSocialCard(page).then((image) => image.toFile(join(socialPreviewDirectory, `${page.route || 'home'}.jpg`)));
+}
+const sitemapUrls = canonicalPageData
+  .map((page) => {
+    const seo = seoPageByRoute.get(page.route);
+    const pageUrl = page.route ? `${publicSiteUrl}${deploymentBase}/${page.route}/` : `${publicSiteUrl}${deploymentBase}/`;
+    const heroUrl = `${publicSiteUrl}${deploymentBase}/${assetPath(page.heroImage)}`;
+    return `  <url>\n    <loc>${escapeHtml(pageUrl)}</loc>\n    <lastmod>${escapeHtml(seo.lastModified)}</lastmod>\n    <image:image><image:loc>${escapeHtml(heroUrl)}</image:loc><image:title>${escapeHtml(page.pageTitle)}</image:title></image:image>\n    <image:image><image:loc>${escapeHtml(socialImageUrl(page.route))}</image:loc><image:title>${escapeHtml(`${page.pageTitle} social preview`)}</image:title></image:image>\n  </url>`;
+  })
   .join('\n');
-await writeFile(join(outputDirectory, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapUrls}\n</urlset>\n`);
+await writeFile(join(outputDirectory, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">\n${sitemapUrls}\n</urlset>\n`);
 await writeFile(join(outputDirectory, 'robots.txt'), `User-agent: *\nAllow: /\n\nSitemap: ${publicSiteUrl}${deploymentBase}/sitemap.xml\n`);
 await writeFile(join(outputDirectory, '.nojekyll'), '');
 console.log(`Published ${pages.length} captured pages.`);
