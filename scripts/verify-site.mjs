@@ -115,6 +115,13 @@ try {
   ];
   if (analyticsRequirements.some((requirement) => !posthog.includes(requirement))) issues.push('analytics: privacy settings or local-development exclusion are incomplete');
 
+  const home = await readFile(join(outputDirectory, 'index.html'), 'utf8');
+  const students = await readFile(join(outputDirectory, 'kdsap/index.html'), 'utf8');
+  const requestedImpact = ['127', 'Active student members', '20', 'Faculty involved', '222', 'Community members screened'];
+  if (requestedImpact.some((value) => !home.includes(value))) issues.push('home: 2025–2026 impact figures are incomplete');
+  if (home.includes('upenn-logo-reverse.png')) issues.push('home: removed University logo is still rendered');
+  if (!students.includes('There is no application') || !students.includes('Join the Penn KDSAP listserv') || !students.includes('pennkdsap.us15.list-manage.com/subscribe')) issues.push('students: open-membership steps or listserv link are incomplete');
+
   const browser = await chromium.launch({ headless: true });
   const posthogRequests = [];
   for (const viewport of [{ name: 'desktop', width: 1440, height: 1000 }, { name: 'mobile', width: 390, height: 844 }]) {

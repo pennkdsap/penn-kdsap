@@ -99,7 +99,7 @@ h1 { max-width: 850px; margin-bottom: 26px; font-size: clamp(3.25rem, 7vw, 6.8re
 .impact-heading h2 { max-width: 780px; margin-bottom: 0; font-size: clamp(2.8rem, 5.4vw, 5.25rem); }
 .impact-heading > div:last-child p { margin: 0 0 18px; color: rgba(255,255,255,.72); }
 .impact-source, .quick-events-link { color: inherit; font-size: .86rem; font-weight: 800; text-underline-offset: 6px; }
-.impact-grid { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid rgba(255,255,255,.25); }
+.impact-grid { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); border-top: 1px solid rgba(255,255,255,.25); }
 .impact-item { container-type: inline-size; min-width: 0; min-height: 270px; padding: 34px 28px 26px; border-right: 1px solid rgba(255,255,255,.18); }
 .impact-item:last-child { border-right: 0; }
 .impact-item strong { display: block; margin-bottom: 54px; color: #fff; font-family: Georgia, "Times New Roman", serif; font-size: clamp(2.4rem, 38cqw, 6.3rem); font-weight: 500; line-height: 1; letter-spacing: -.07em; }
@@ -328,9 +328,7 @@ h1 { max-width: 850px; margin-bottom: 26px; font-size: clamp(3.25rem, 7vw, 6.8re
 .social-link-instagram { background: linear-gradient(135deg, #833ab4 5%, #e1306c 52%, #fcaf45 100%); }
 .footer-bottom { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 30px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,.14); font-size: .78rem; }
 .footer-bottom p { margin: 0; }
-.footer-affiliation { display: flex; align-items: center; gap: 16px; }
-.footer-university { display: block; width: 170px; height: 45px; overflow: hidden; }
-.footer-university img { width: 170px; height: auto; margin-top: -28px; }
+.footer-affiliation { display: flex; align-items: center; }
 .theme-toggle { min-height: 42px; display: inline-flex; align-items: center; gap: 10px; margin: -10px 0; padding: 7px 13px; color: var(--white); border: 1px solid rgba(255,255,255,.42); border-radius: 999px; background: transparent; font: inherit; font-weight: 800; cursor: pointer; }
 .theme-toggle:hover, .theme-toggle:focus-visible { background: rgba(255,255,255,.1); }
 .theme-toggle-icon { width: 22px; height: 22px; display: inline-grid; place-items: center; }

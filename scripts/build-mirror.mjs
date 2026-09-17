@@ -172,7 +172,7 @@ const renderSocialLinks = () => homeContent.footer.socialLinks.map((link) => {
   if (!icon) throw new Error(`Unsupported footer social network: ${link.network}`);
   return `<a class="social-link social-link-${escapeHtml(key)}" href="${escapeHtml(link.url)}" target="_blank" rel="noopener" aria-label="${escapeHtml(link.label)}"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="${icon.path}"></path></svg></a>`;
 }).join('');
-const footerAffiliation = (prefix = '') => `<div class="footer-affiliation"><a class="footer-university" href="${escapeHtml(homeContent.footer.universityUrl)}" target="_blank" rel="noopener"><img src="${prefix}${escapeHtml(assetPath(homeContent.footer.universityLogo))}" alt="${escapeHtml(homeContent.footer.universityLogoAlt)}" width="2500" height="1500" loading="lazy"></a><p>${escapeHtml(homeContent.footer.affiliation)}</p></div>`;
+const footerAffiliation = () => `<div class="footer-affiliation"><p>${escapeHtml(homeContent.footer.affiliation)}</p></div>`;
 const wrapSocialTitle = (value, maxCharacters = 23) => {
   const lines = [];
   let line = '';
@@ -284,7 +284,7 @@ const renderNativeBody = (name, data) => {
       <section class="interior-section" data-reveal>
         <div class="shell"><div class="section-heading"><p class="eyebrow eyebrow-dark">${escapeHtml(data.sectionEyebrow)}</p><h2>${escapeHtml(data.sectionTitle)}</h2></div>
           <div class="info-grid">${renderInfoCards(data.objectives)}</div>
-          <a class="button button-dark section-action" href="${escapeHtml(data.actionUrl)}">${escapeHtml(data.actionLabel)}</a>
+          <a class="button button-dark section-action" href="${escapeHtml(data.actionUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(data.actionLabel)} <span aria-hidden="true">↗</span></a>
         </div>
       </section>`;
   if (name === 'events') {
@@ -350,7 +350,7 @@ const renderNativePage = (name, data, route) => nativeTemplate
   .replaceAll('{{FOOTER_CONNECT_LINKS}}', renderPrefixedLinks(homeContent.footer.connectLinks))
   .replaceAll('{{FOOTER_SOCIAL_HEADING}}', escapeHtml(homeContent.footer.socialHeading))
   .replaceAll('{{FOOTER_SOCIAL_LINKS}}', renderSocialLinks())
-  .replaceAll('{{FOOTER_AFFILIATION_BLOCK}}', footerAffiliation('../'))
+  .replaceAll('{{FOOTER_AFFILIATION_BLOCK}}', footerAffiliation())
   .replaceAll('{{FOOTER_DARK_MODE_LABEL}}', escapeHtml(homeContent.footer.darkModeLabel))
   .replaceAll('{{FOOTER_LIGHT_MODE_LABEL}}', escapeHtml(homeContent.footer.lightModeLabel))
   .replaceAll('{{FOOTER_COPYRIGHT}}', escapeHtml(homeContent.footer.copyright))

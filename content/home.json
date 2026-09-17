@@ -63,15 +63,14 @@
   },
   "impact": {
     "eyebrow": "Impact by the numbers",
-    "title": "A year of preparation, partnership, and care",
-    "introduction": "A verified snapshot from Penn KDSAP’s 2023–24 year in review.",
+    "title": "Our 2025–2026 community",
+    "introduction": "A snapshot of Penn KDSAP’s students, faculty, and community impact during the 2025–2026 school year.",
     "sourceLabel": "Explore chapter updates",
     "sourceUrl": "news/",
     "items": [
-      { "value": "6", "label": "In-person kidney screenings" },
-      { "value": "120+", "label": "Students attended general training" },
-      { "value": "6", "label": "Screening stations in the volunteer workflow" },
-      { "value": "2", "label": "General training sessions" }
+      { "value": "127", "label": "Active student members" },
+      { "value": "20", "label": "Faculty involved" },
+      { "value": "222", "label": "Community members screened" }
     ]
   },
   "communityMap": {
@@ -149,9 +148,6 @@
       { "network": "facebook", "label": "Penn KDSAP on Facebook", "url": "https://www.facebook.com/pennkdsap" },
       { "network": "instagram", "label": "Penn KDSAP on Instagram", "url": "https://www.instagram.com/pennkdsap/" }
     ],
-    "universityLogo": "/images/upenn-logo-reverse.png",
-    "universityLogoAlt": "University of Pennsylvania",
-    "universityUrl": "https://www.upenn.edu/",
     "darkModeLabel": "Dark mode",
     "lightModeLabel": "Light mode",
     "copyright": "Penn KDSAP",
