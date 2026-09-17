@@ -578,18 +578,6 @@ content:
                     label: Profile URL
                     type: string
                     required: true
-              - name: universityLogo
-                label: University logo
-                type: image
-                required: true
-              - name: universityLogoAlt
-                label: University logo description
-                type: string
-                required: true
-              - name: universityUrl
-                label: University website URL
-                type: string
-                required: true
               - name: darkModeLabel
                 label: Dark mode button text
                 type: string
@@ -1088,7 +1076,7 @@ content:
                 label: Text
                 type: text
           - name: objectives
-            label: Student experience cards
+            label: Joining steps
             type: object
             list:
               collapsible:

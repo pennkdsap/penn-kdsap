@@ -1,18 +1,18 @@
 {
   "pageTitle": "For Students | Penn KDSAP",
-  "metaDescription": "Explore Penn KDSAP service, training, education, and student development opportunities.",
+  "metaDescription": "Join Penn KDSAP without an application: subscribe to the listserv, attend general training, and volunteer or attend professional development events.",
   "eyebrow": "For Penn students",
   "title": "Learn through service, teamwork, and community partnership",
-  "summary": "Penn KDSAP gives undergraduates a structured way to support community programs while learning from peers and physicians.",
+  "summary": "Penn KDSAP gives undergraduates a structured way to support community programs while learning from peers and physicians. There is no application for general membership.",
   "heroImage": "/images/reel/volunteer-training.webp",
   "heroImageAlt": "Penn students gathered around a volunteer training demonstration",
-  "sectionEyebrow": "Student experience",
-  "sectionTitle": "Three connected parts of membership",
+  "sectionEyebrow": "Open membership",
+  "sectionTitle": "Join Penn KDSAP in three steps",
   "objectives": [
-    { "title": "Community service", "text": "Support screening and education events organized with Philadelphia community partners." },
-    { "title": "Training", "text": "Prepare for volunteer responsibilities through student-led and clinician-supported instruction." },
-    { "title": "Development", "text": "Build relationships with peers, explore health careers, and contribute through committees and leadership." }
+    { "title": "1. Join the listserv", "text": "Subscribe for training announcements, screening sign-ups, professional development opportunities, and chapter updates." },
+    { "title": "2. Attend general training", "text": "Complete a general training session to prepare for volunteer responsibilities at community screenings." },
+    { "title": "3. Get involved", "text": "Volunteer at screenings and attend panels, workshops, and other professional development events." }
   ],
-  "actionLabel": "Ask about joining Penn KDSAP",
-  "actionUrl": "../contact-us/"
+  "actionLabel": "Join the Penn KDSAP listserv",
+  "actionUrl": "https://pennkdsap.us15.list-manage.com/subscribe?u=4bc2bdad5bc999343754897ff&id=187a3e95f7"
 }
