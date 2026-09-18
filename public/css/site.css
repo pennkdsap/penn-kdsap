@@ -281,6 +281,7 @@ h1 { max-width: 850px; margin-bottom: 26px; font-size: clamp(3.25rem, 7vw, 6.8re
   .timeline-step.is-current .timeline-card { transform: none; }
 }
 @media (prefers-reduced-motion: reduce) { .timeline-step.is-current .timeline-card { transform: none; } }
+.people-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
 .person-card { overflow: hidden; background: var(--cream); }
 .person-card img { width: 100%; height: auto; aspect-ratio: 2 / 3; object-fit: cover; filter: saturate(.88); transition: filter .35s ease, transform .45s ease; }
 .person-card:hover img, .person-card:focus-within img { filter: saturate(1.06); transform: scale(1.018); }
