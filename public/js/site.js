@@ -82,7 +82,8 @@
         entry.target.classList.add('is-visible');
         observer.unobserve(entry.target);
       });
-    }, { threshold: .12 });
+    // Long sections must reveal even when only a small part fits on screen.
+    }, { threshold: 0 });
     reveals.forEach((element) => observer.observe(element));
   } else {
     reveals.forEach((element) => element.classList.add('is-visible'));

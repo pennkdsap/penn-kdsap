@@ -161,6 +161,20 @@ try {
     await page.close();
   }
   const interactions = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  for (const width of [390, 768, 1440]) {
+    await interactions.setViewportSize({ width, height: 600 });
+    await interactions.emulateMedia({ reducedMotion: 'no-preference' });
+    await interactions.goto(`${localBase}/meet-the-team/`);
+    await interactions.locator('.people-grid').scrollIntoViewIfNeeded();
+    await interactions.waitForFunction(() => getComputedStyle(document.querySelector('.interior-section')).opacity === '1');
+    const grid = await interactions.locator('.people-grid').evaluate((element) => {
+      const style = getComputedStyle(element);
+      return { display: style.display, columns: style.gridTemplateColumns.split(' ').length };
+    });
+    const expectedColumns = width === 390 ? 1 : width === 768 ? 2 : 3;
+    if (grid.display !== 'grid' || grid.columns !== expectedColumns) issues.push(`team at ${width}px: expected ${expectedColumns} portrait columns`);
+  }
+  await interactions.setViewportSize({ width: 1440, height: 900 });
   for (const theme of ['light', 'dark']) {
     await interactions.emulateMedia({ colorScheme: theme, reducedMotion: 'reduce' });
     await interactions.goto(localBase);
