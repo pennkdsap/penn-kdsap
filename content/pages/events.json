@@ -11,7 +11,7 @@
   "calendarIntroduction": "Browse community screenings, panels, workshops, training, and member activities below. Open Google Calendar for the latest details or add either calendar to your own.",
   "calendarFeedUrl": "https://calendar.google.com/calendar/ical/8fe5fd5bfefd6ba503bd3cf74ef091705b236dc86c6887a8348259bef0a54cc6%40group.calendar.google.com/public/basic.ics",
   "calendarSubscribeUrl": "https://calendar.google.com/calendar/embed?src=8fe5fd5bfefd6ba503bd3cf74ef091705b236dc86c6887a8348259bef0a54cc6%40group.calendar.google.com&ctz=America%2FNew_York",
-  "memberCalendarUrl": "https://calendar.google.com/calendar/r?cid=7b6bbf92dbb7101e627526204efe99005ac6efec96cba169fc68f75f36dbc47f%40group.calendar.google.com",
+  "memberCalendarUrl": "https://calendar.google.com/calendar/ical/7b6bbf92dbb7101e627526204efe99005ac6efec96cba169fc68f75f36dbc47f%40group.calendar.google.com/public/basic.ics",
   "memberCalendarSubscribeUrl": "https://calendar.google.com/calendar/r?cid=7b6bbf92dbb7101e627526204efe99005ac6efec96cba169fc68f75f36dbc47f%40group.calendar.google.com",
   "memberCalendarFeedUrl": "https://calendar.google.com/calendar/ical/7b6bbf92dbb7101e627526204efe99005ac6efec96cba169fc68f75f36dbc47f%40group.calendar.google.com/public/basic.ics",
   "calendarWindowDays": 60,
